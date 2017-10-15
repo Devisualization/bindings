@@ -1,0 +1,12 @@
+﻿<Properties StartupItem="dub.json">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Default" PreferredExecutionTarget="cov" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="source\libuv\devisualization\bindings\libuv\uv_win.d">
+    <Files>
+      <File FileName="source\libuv\devisualization\bindings\libuv\uv_win.d" Line="33" Column="4" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+</Properties>

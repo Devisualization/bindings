@@ -1,0 +1,37 @@
+{
+    "name": "de_bindings",
+    "description": "Bindings for Devisualization projects.",
+    "copyright": "Copyright © 2017, Richard Andrew Cattermole, Devisualization",
+    "authors": ["Richard Andrew Cattermole"],
+    "homepage": "https://github.com/Devisualization/bindings",
+    "license": "BSL",
+    "sourcePaths": [],
+    "targetType": "none",
+	"subPackages": [
+        {
+            "name": "opengl",
+            "sourcePaths": ["source/opengl"],
+            "importPaths": ["source/opengl"],
+			"dependencies": {
+				"derelict-util": "~>2.1.0"
+			}
+        },
+		{
+            "name": "x11",
+            "sourcePaths": ["source/x11"],
+            "importPaths": ["source/x11"],
+			"dependencies": {
+				"derelict-util": "~>2.1.0"
+			}
+        },
+		{
+            "name": "libuv",
+            "sourcePaths": ["source/libuv"],
+            "importPaths": ["source/libuv"],
+			"versions-windows": ["Windows2003"],
+			"dependencies": {
+				"derelict-util": "~>2.1.0"
+			}
+        }
+	]
+}
