@@ -23,7 +23,7 @@ version(Windows) {
 
 ///
 struct OpenGL_Loader(T_Callbacks, T_Bindings=defaultgl.GL, T_Bindings_ExtensionUDA=defaultgl.OpenGL_Extension, T_Bindings_VersionUDA=defaultgl.OpenGL_Version) {
-	import devisualization.bindings.symbolloader;
+	import derelict.util.sharedlib;
 	
 	private{
 		string[] openglFileNames;
