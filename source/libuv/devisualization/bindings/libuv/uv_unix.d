@@ -30,15 +30,15 @@ import core.sys.posix.dirent;
 import core.sys.posix.sys.socket;
 import core.sys.posix.netinet.in_;
 import core.sys.posix.netinet.tcp;
-import core.sys.posix.netdb;
-import core.sys.posix.termios;
+public import core.sys.posix.netdb;
+public import core.sys.posix.termios;
 import core.sys.posix.pwd;
 import core.sys.posix.semaphore;
 import core.sys.posix.pthread;
 import core.sys.posix.signal;
 
 import devisualization.bindings.libuv.uv;
-import devisualization.bindings.libuv.uv_threadpool;
+public import devisualization.bindings.libuv.uv_threadpool;
 
 version(linux) {
 	public import devisualization.bindings.libuv.uv_linux;
@@ -247,11 +247,9 @@ mixin template UV_LOOP_PRIVATE_FIELDS() {
 	mixin UV_PLATFORM_LOOP_FIELDS;
 }
 
-mixin template UV_REQ_TYPE_PRIVATE() { /* empty */ }
-
-mixin template UV_REQ_PRIVATE_FIELDS() { /* empty */ }
-
-mixin template UV_PRIVATE_REQ_TYPES() { /* empty */ }
+enum UV_REQ_TYPE_PRIVATE = "";
+mixin template UV_REQ_PRIVATE_FIELDS() {}
+mixin template UV_PRIVATE_REQ_TYPES() {}
 
 mixin template UV_WRITE_PRIVATE_FIELDS() {
 	void*[2] queue;
@@ -349,7 +347,7 @@ mixin template UV_GETADDRINFO_PRIVATE_FIELDS() {
 	addrinfo* hints;
 	char* hostname;
 	char* service;
-	addrinfo* addrinfo;
+	addrinfo* addressinfo;
 	int retcode;
 }
 
