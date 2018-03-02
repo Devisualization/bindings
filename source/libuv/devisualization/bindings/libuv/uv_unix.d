@@ -23,19 +23,19 @@ module devisualization.bindings.libuv.uv_unix;
 version(Posix):
 __gshared extern(C):
 
-import core.sys.posix.sys.types;
-import core.sys.posix.sys.stat;
-import core.sys.posix.fcntl;
-import core.sys.posix.dirent;
-import core.sys.posix.sys.socket;
-import core.sys.posix.netinet.in_;
-import core.sys.posix.netinet.tcp;
+public import core.sys.posix.sys.types;
+public import core.sys.posix.sys.stat;
+public import core.sys.posix.fcntl;
+public import core.sys.posix.dirent;
+public import core.sys.posix.sys.socket;
+public import core.sys.posix.netinet.in_;
+public import core.sys.posix.netinet.tcp;
 public import core.sys.posix.netdb;
 public import core.sys.posix.termios;
-import core.sys.posix.pwd;
-import core.sys.posix.semaphore;
-import core.sys.posix.pthread;
-import core.sys.posix.signal;
+public import core.sys.posix.pwd;
+public import core.sys.posix.semaphore;
+public import core.sys.posix.pthread;
+public import core.sys.posix.signal;
 
 import devisualization.bindings.libuv.uv;
 public import devisualization.bindings.libuv.uv_threadpool;
@@ -56,6 +56,7 @@ version(linux) {
 	public import devisualization.bindings.libuv.uv_bsd;
 } else static assert(0, "Unknown Posix system");
 
+///
 enum {
 	///
 	NI_MAXHOST = 1025,
@@ -63,12 +64,8 @@ enum {
 	NI_MAXSERV = 32
 }
 
-static if (!__traits(compiles, {mixin UV_IO_PRIVATE_PLATFORM_FIELDS;})) {
-	mixin template UV_IO_PRIVATE_PLATFORM_FIELDS() {}
-}
-
 ///
-alias uv__io_cb = void function(uv_loop_s* loop, uv__io_s* w, uint events);
+alias uv__io_cb = void function(UV.uv_loop_s* loop, uv__io_s* w, uint events);
 ///
 alias uv__io_t = uv__io_s;
 
@@ -86,12 +83,13 @@ struct uv__io_s {
 	uint events;
 	///
 	int fd;
-	///
-	mixin UV_IO_PRIVATE_PLATFORM_FIELDS;
+	
+    ///
+    mixin UV_IO_PRIVATE_PLATFORM_FIELDS;
 }
 
 ///
-alias uv__async_cb = void function(uv_loop_s* loop, uv__async* w, uint nevents);
+alias uv__async_cb = void function(UV.uv_loop_s* loop, uv__async* w, uint nevents);
 
 ///
 struct uv__async {
@@ -101,23 +99,6 @@ struct uv__async {
 	uv__io_t io_watcher;
 	///
 	int wfd;
-}
-
-static if (!__traits(compiles, {alias T = UV_PLATFORM_SEM_T;})) {
-	///
-	alias UV_PLATFORM_SEM_T = sem_t;
-}
-
-static if (!__traits(compiles, {mixin UV_PLATFORM_LOOP_FIELDS;})) {
-	mixin template UV_PLATFORM_LOOP_FIELDS() {}
-}
-
-static if (!__traits(compiles, {mixin UV_PLATFORM_FS_EVENT_FIELDS;})) {
-	mixin template UV_PLATFORM_FS_EVENT_FIELDS() {}
-}
-
-static if (!__traits(compiles, {mixin UV_STREAM_PRIVATE_PLATFORM_FIELDS;})) {
-	mixin template UV_STREAM_PRIVATE_PLATFORM_FIELDS() {}
 }
 
 /// Note: May be cast to struct iovec. See writev(2).
@@ -215,7 +196,7 @@ struct uv_lib_t {
 }
 
 mixin template UV_LOOP_PRIVATE_FIELDS() {
-	c_ulong flags;
+	size_t flags;
 	int backend_fd;
 	void*[2] pending_queue;
 	void*[2] watcher_queue;
@@ -373,7 +354,7 @@ mixin template UV_FS_PRIVATE_FIELDS() {
 	mode_t mode;
 	uint nbufs;
 	uv_buf_t* bufs;
-	off_t off;
+	ptrdiff_t off;
 	uv_uid_t uid;
 	uv_gid_t gid;
 	double atime;

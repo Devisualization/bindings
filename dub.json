@@ -30,8 +30,8 @@
             "importPaths": ["source/libuv"],
 			"versions-windows": ["Windows2003"],
 			"dependencies": {
-				"derelict-util": "~>2.1.0"
-			}
+				"derelict-util": "~>2.1.0",
+			},
         }
 	]
 }
