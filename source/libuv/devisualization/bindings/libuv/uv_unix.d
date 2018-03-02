@@ -65,7 +65,7 @@ enum {
 }
 
 ///
-alias uv__io_cb = void function(UV.uv_loop_s* loop, uv__io_s* w, uint events);
+alias uv__io_cb = void function(uv_loop_s* loop, uv__io_s* w, uint events);
 ///
 alias uv__io_t = uv__io_s;
 
@@ -89,7 +89,7 @@ struct uv__io_s {
 }
 
 ///
-alias uv__async_cb = void function(UV.uv_loop_s* loop, uv__async* w, uint nevents);
+alias uv__async_cb = void function(uv_loop_s* loop, uv__async* w, uint nevents);
 
 ///
 struct uv__async {

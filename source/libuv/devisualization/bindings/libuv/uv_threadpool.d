@@ -6,6 +6,6 @@ __gshared extern(C):
 struct uv__work {
 	extern(C) void function(uv__work* w) work;
 	extern(C) void function(uv__work* w, int status) done;
-	UV.uv_loop_s* loop;
+	uv_loop_s* loop;
 	void*[2] wq;
 }

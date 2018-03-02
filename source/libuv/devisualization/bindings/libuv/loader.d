@@ -11,7 +11,7 @@ import derelict.util.sharedlib;
 
 ///
 __gshared LibUVLoader libuvLoader;
-__gshared UV* libuv;
+__gshared LibUVFunctions* libuv;
 
 /// uses GC because it is "smart" in loading the library
 struct LibUVLoader {
@@ -55,7 +55,7 @@ struct LibUVLoader {
 
 	/// File can be null
 	this(string file) {
-    	libuv = new UV;
+    	libuv = new LibUVFunctions;
 	
 		try {
     		if (file !is null)
