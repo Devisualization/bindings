@@ -24,7 +24,8 @@ import core.stdc.stdio;
 
 public import devisualization.bindings.libuv.uv_win;
 public import devisualization.bindings.libuv.uv_unix;
-    
+extern(C):
+
 ///
 enum uv_errno_t {
     ///
