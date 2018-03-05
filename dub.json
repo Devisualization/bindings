@@ -22,7 +22,16 @@
             "importPaths": ["source/x11"],
 			"dependencies": {
 				"derelict-util": "~>2.1.0"
-			}
+			},
+			"configurations": [
+			    {
+			        "name": "WidePrototypes",
+			        "versions": ["NeedWidePrototypes"]
+			    },
+			    {
+			        "name": "NarrowPrototypes"
+			    }
+			]
         },
 		{
             "name": "libuv",

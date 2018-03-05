@@ -91,11 +91,60 @@ extern(C):
 	///
 	XImage* function(Display* display, Drawable d, int x, int y, uint width, uint height, c_ulong plane_mask, int format) XGetImage;
 	///
-	XImage* function(Display* display, Drawable d, int x, int y, uint width, uint height, c_ulong plane_mask, int format, XImage* dest_image, int dest_x, int dest_y) XGetSubImage;
+	XImage* function(Display* display, Drawable d, int x, int y, uint width, uint height, c_ulong plane_mask,int format, XImage* dest_image, int dest_x, int dest_y) XGetSubImage;
+
+
 
 	/*
 	 * X function declarations.
 	 */
+
+	Display* function(const char*) XOpenDisplay;
+    void function() XrmInitialize;
+    char* function(Display*, int*) XFetchBytes;
+    char* function(Display*, int*, int) XFetchBuffer;
+    char* function(Display*, Atom) XGetAtomName;
+    Status function(Display*, Atom*, int, char**) XGetAtomNames;
+    char* function(Display*, const char*, const char*) XGetDefault;
+    char* function(const char*) XDisplayName;
+    char* function(KeySym) XKeysymToString;
+    extern(C) int function(Display*) function(Display* Bool) XSynchronize;
+
+	alias XSetAfterFunctionFunc1 = extern(C) int function(Display*);
+	alias XSetAfterFunctionFunc2 = extern(C) int function(Display*);
+
+    XSetAfterFunctionFunc1 function(Display*, XSetAfterFunctionFunc2) XSetAfterFunction;
+    Atom function(Display*, const char*, Bool) XInternAtom;
+    Status function(Display*, char**, int, Bool, Atom*) XInternAtoms;
+    Colormap function(Display*, Colormap) XCopyColormapAndFree;
+    Colormap function(Display*, Window, Visual*, int) XCreateColormap;
+    Cursor function(Display*, Pixmap, Pixmap, XColor*, XColor*, uint, uint) XCreatePixmapCursor;
+    Cursor function(Display*, Font, Font, uint, uint, const XColor* , const XColor* ) XCreateGlyphCursor;
+    Cursor function(Display*, uint) XCreateFontCursor;
+    Font function(Display*, const char*) XLoadFont;
+    GC function(Display*, Drawable, ulong, XGCValues*) XCreateGC;
+    GContext function(GC) XGContextFromGC;
+    void function(Display*, GC) XFlushGC;
+    Pixmap function(Display*, Drawable, uint, uint, uint) XCreatePixmap;
+    Pixmap function(Display*, Drawable, const char*, uint, uint) XCreateBitmapFromData;
+    Pixmap function(Display*, Drawable, char*, uint, uint, ulong, ulong, uint) XCreatePixmapFromBitmapData;
+    Window function(Display*, Window, int, int, uint, uint, uint, ulong, ulong) XCreateSimpleWindow;
+    Window function(Display*, Atom) XGetSelectionOwner;
+    Window function(Display*, Window, int, int, uint, uint, uint, int, uint, Visual*, ulong, XSetWindowAttributes*) XCreateWindow;
+    Colormap* function(Display*, Window, int*) XListInstalledColormaps;
+    char** function(Display*, const char*, int, int*) XListFonts;
+    char** function(Display*, const char*, int, int*, XFontStruct**) XListFontsWithInfo;
+    char** function(Display*, int*)XGetFontPath;
+    char** function(Display*, int*) XListExtensions;
+    Atom* function(Display*, Window, int*) XListProperties;
+    XHostAddress* function(Display*, int*, Bool*) XListHosts;
+    KeySym function(XKeyEvent*, int) XLookupKeysym;
+
+    version(NeedWidePrototype) {
+	    KeySym* function(Display*, uint, int, int*) XGetKeyboardMapping;
+    } else {
+	    KeySym* function(Display*, KeyCode, int, int*) XGetKeyboardMapping;
+    }
 
 	///
 	KeySym function(const char* string_) XStringToKeysym;
