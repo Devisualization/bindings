@@ -48,7 +48,133 @@ module devisualization.bindings.x11.Xresource;
 import devisualization.bindings.x11.Xlib;
 import core.stdc.string : strcmp;
 import core.stdc.config : c_long, c_ulong;
-__gshared extern(C):
+
+mixin template XResourceFunctions() {
+    import devisualization.bindings.x11.Xlib;
+    import devisualization.bindings.x11.Xresource;
+extern(C):
+
+    ///
+    char* function(uint size) Xpermalloc;
+
+    /// find quark for string, create new quark if none already exists */
+    XrmQuark function(const char* string_) XrmStringToQuark;
+    ///
+    XrmQuark function(const char* string_) XrmPermStringToQuark;
+
+    /// find string for quark
+    XrmString function(XrmQuark quark) XrmQuarkToString;
+
+    ///
+    XrmQuark function() XrmUniqueQuark;
+
+    ///
+    void function(const char* string_, XrmQuarkList quarks_return) XrmStringToQuarkList;
+    ///
+    void function(const char* string_,	XrmBindingList bindings_return, XrmQuarkList quarks_return) XrmStringToBindingQuarkList;
+
+    ///
+    void function(XrmDatabase database) XrmDestroyDatabase;
+    ///
+    void function(XrmDatabase* database, XrmBindingList bindings, XrmQuarkList quarks, XrmRepresentation type, XrmValue* value) XrmQPutResource;
+    ///
+    void function(XrmDatabase* database, const char* specifier, const char* type, XrmValue* value) XrmPutResource;
+    ///
+    void function(XrmDatabase* database, XrmBindingList bindings, XrmQuarkList quarks, const char* value) XrmQPutStringResource;
+    ///
+    void function(XrmDatabase* database, const char* specifier, const char* value) XrmPutStringResource;
+    ///
+    void function(XrmDatabase* database, const char* line) XrmPutLineResource;
+    ///
+    Bool function(XrmDatabase database, XrmNameList quark_name, XrmClassList quark_class, XrmRepresentation* quark_type_return, XrmValue* value_return) XrmQGetResource;
+    ///
+    Bool function(XrmDatabase database, const char* str_name, const char* str_class, char** str_type_return, XrmValue* value_return) XrmGetResource;
+    ///
+    Bool function(XrmDatabase database, XrmNameList names, XrmClassList classes, XrmSearchList list_return, int list_length) XrmQGetSearchList;
+    ///
+    Bool function(XrmSearchList list, XrmName name, XrmClass class_, XrmRepresentation* type_return, XrmValue* value_return) XrmQGetSearchResource;
+
+    ///
+    version(_XP_PRINT_SERVER_) {
+    } else {
+        ///
+        void function(Display* display, XrmDatabase database) XrmSetDatabase;
+        ///
+        XrmDatabase function(Display* display) XrmGetDatabase;
+    }
+
+    ///
+    XrmDatabase function(const char* filename) XrmGetFileDatabase;
+    ///
+    Status function(const char* filename, XrmDatabase* target, Bool override_) XrmCombineFileDatabase;
+
+    /**
+     * Params:
+     * 		data	=	null terminated string
+     */
+    XrmDatabase function(const char* data) XrmGetStringDatabase;
+
+    ///
+    void function(XrmDatabase database, const char* filename) XrmPutFileDatabase;
+    ///
+    void function(XrmDatabase source_db, XrmDatabase* target_db) XrmMergeDatabases;
+    ///
+    void function(XrmDatabase source_db, XrmDatabase* target_db, Bool override_) XrmCombineDatabase;
+
+    ///
+    Bool function(XrmDatabase db, XrmNameList name_prefix, XrmClassList class_prefix, int mode, XrmEnumerateDatabaseFunc proc, XPointer closure) XrmEnumerateDatabase;
+
+    ///
+    const char* function(XrmDatabase database) XrmLocaleOfDatabase;
+
+    ///
+    void function(XrmDatabase* database, XrmOptionDescList table, int table_count, const char* name, int* argc_in_out, char** argv_in_out) XrmParseCommand;
+
+    /****************************************************************
+     *
+     * Name and Class lists.
+     *
+     ****************************************************************/
+
+    ///
+    alias XrmName = XrmQuark;
+    ///
+    alias XrmNameList = XrmQuarkList;
+    ///
+    XrmString XrmNameToString(XrmQuark name) { return XrmQuarkToString(name); }
+    ///
+    XrmQuark XrmStringToName(const char* string_) { return XrmStringToQuark(string_); }
+    ///
+    void XrmStringToNameList(const char* str, XrmQuarkList name) { XrmStringToQuarkList(str, name); }
+
+    ///
+    alias XrmClass = XrmQuark;
+    ///
+    alias XrmClassList = XrmQuarkList;
+    ///
+    XrmString XrmClassToString(XrmQuark c_class) { return XrmQuarkToString(c_class); }
+    ///
+    XrmQuark XrmStringToClass(XrmString c_class) { return XrmStringToQuark(c_class); }
+    ///
+    void XrmStringToClassList(const char* str, XrmQuarkList c_class) { XrmStringToQuarkList(str, c_class); }
+
+    /****************************************************************
+     *
+     * Resource Representation Types and Values
+     *
+     ****************************************************************/
+
+    ///
+    alias XrmRepresentation = XrmQuark;
+    ///
+    XrmQuark XrmStringToRepresentation(XrmString string_) { return XrmStringToQuark(string_); }
+    ///
+    XrmString XrmRepresentationToString(XrmQuark type) { return XrmQuarkToString(type); }
+
+    ///
+    alias XrmEnumerateDatabaseFunc = extern(C) Bool function(XrmDatabase* db, XrmBindingList bindings, XrmQuarkList quarks, XrmRepresentation* type, XrmValue* value, XPointer closure);
+}
+
 
 /****************************************************************
  ****************************************************************
@@ -65,9 +191,6 @@ __gshared extern(C):
  * Memory Management
  *
  ****************************************************************/
-
-///
-char* function(uint size) Xpermalloc;
 
 /****************************************************************
  *
@@ -87,17 +210,6 @@ alias XrmString = char*;
 ///
 enum NULLSTRING = cast(XrmString)0;
 
-/// find quark for string, create new quark if none already exists */
-XrmQuark function(const char* string_) XrmStringToQuark;
-///
-XrmQuark function(const char* string_) XrmPermStringToQuark;
-
-/// find string for quark
-XrmString function(XrmQuark quark) XrmQuarkToString;
-
-///
-XrmQuark function() XrmUniqueQuark;
-
 ///
 bool XrmStringsEqual(XrmString a1, XrmString a2) { return strcmp(a1, a2) == 0; }
 
@@ -116,52 +228,6 @@ enum XrmBinding {
 }
 ///
 alias XrmBindingList = XrmBinding*;
-
-///
-void function(const char* string_, XrmQuarkList quarks_return) XrmStringToQuarkList;
-///
-void function(const char* string_,	XrmBindingList bindings_return, XrmQuarkList quarks_return) XrmStringToBindingQuarkList;
-
-/****************************************************************
- *
- * Name and Class lists.
- *
- ****************************************************************/
-
-///
-alias XrmName = XrmQuark;
-///
-alias XrmNameList = XrmQuarkList;
-///
-XrmString XrmNameToString(XrmQuark name) { return XrmQuarkToString(name); }
-///
-XrmQuark XrmStringToName(const char* string_) { return XrmStringToQuark(string_); }
-///
-void XrmStringToNameList(const char* str, XrmQuarkList name) { XrmStringToQuarkList(str, name); }
-
-///
-alias XrmClass = XrmQuark;
-///
-alias XrmClassList = XrmQuarkList;
-///
-XrmString XrmClassToString(XrmQuark c_class) { return XrmQuarkToString(c_class); }
-///
-XrmQuark XrmStringToClass(XrmString c_class) { return XrmStringToQuark(c_class); }
-///
-void XrmStringToClassList(const char* str, XrmQuarkList c_class) { XrmStringToQuarkList(str, c_class); }
-
-/****************************************************************
- *
- * Resource Representation Types and Values
- *
- ****************************************************************/
-
-///
-alias XrmRepresentation = XrmQuark;
-///
-XrmQuark XrmStringToRepresentation(XrmString string_) { return XrmStringToQuark(string_); }
-///
-XrmString XrmRepresentationToString(XrmQuark type) { return XrmQuarkToString(type); }
 
 ///
 struct XrmValue {
@@ -189,59 +255,11 @@ alias XrmSearchList = XrmHashTable[];
 ///
 alias XrmDatabase = _XrmHashBucketRec*;
 
-///
-void function(XrmDatabase database) XrmDestroyDatabase;
-///
-void function(XrmDatabase* database, XrmBindingList bindings, XrmQuarkList quarks, XrmRepresentation type, XrmValue* value) XrmQPutResource;
-///
-void function(XrmDatabase* database, const char* specifier, const char* type, XrmValue* value) XrmPutResource;
-///
-void function(XrmDatabase* database, XrmBindingList bindings, XrmQuarkList quarks, const char* value) XrmQPutStringResource;
-///
-void function(XrmDatabase* database, const char* specifier, const char* value) XrmPutStringResource;
-///
-void function(XrmDatabase* database, const char* line) XrmPutLineResource;
-///
-Bool function(XrmDatabase database, XrmNameList quark_name, XrmClassList quark_class, XrmRepresentation* quark_type_return, XrmValue* value_return) XrmQGetResource;
-///
-Bool function(XrmDatabase database, const char* str_name, const char* str_class, char** str_type_return, XrmValue* value_return) XrmGetResource;
-///
-Bool function(XrmDatabase database, XrmNameList names, XrmClassList classes, XrmSearchList list_return, int list_length) XrmQGetSearchList;
-///
-Bool function(XrmSearchList list, XrmName name, XrmClass class_, XrmRepresentation* type_return, XrmValue* value_return) XrmQGetSearchResource;
-
 /****************************************************************
  *
  * Resource Database Management
  *
  ****************************************************************/
-
-///
-version(_XP_PRINT_SERVER_) {
-} else {
-	///
-	void function(Display* display, XrmDatabase database) XrmSetDatabase;
-	///
-	XrmDatabase function(Display* display) XrmGetDatabase;
-}
-
-///
-XrmDatabase function(const char* filename) XrmGetFileDatabase;
-///
-Status function(const char* filename, XrmDatabase* target, Bool override_) XrmCombineFileDatabase;
-
-/**
- * Params:
- * 		data	=	null terminated string
- */
-XrmDatabase function(const char* data) XrmGetStringDatabase;
-
-///
-void function(XrmDatabase database, const char* filename) XrmPutFileDatabase;
-///
-void function(XrmDatabase source_db, XrmDatabase* target_db) XrmMergeDatabases;
-///
-void function(XrmDatabase source_db, XrmDatabase* target_db, Bool override_) XrmCombineDatabase;
 
 ///
 enum {
@@ -250,14 +268,6 @@ enum {
 	///
 	XrmEnumOneLevel = 1
 }
-
-alias XrmEnumerateDatabaseFunc = extern(C) Bool function(XrmDatabase* db, XrmBindingList bindings, XrmQuarkList quarks, XrmRepresentation* type, XrmValue* value, XPointer closure);
-
-///
-Bool function(XrmDatabase db, XrmNameList name_prefix, XrmClassList class_prefix, int mode, XrmEnumerateDatabaseFunc proc, XPointer closure) XrmEnumerateDatabase;
-
-///
-const char* function(XrmDatabase database) XrmLocaleOfDatabase;
 
 /****************************************************************
  *
@@ -300,5 +310,3 @@ struct XrmOptionDescRec {
 ///
 alias XrmOptionDescList = XrmOptionDescRec*;
 
-///
-void function(XrmDatabase* database, XrmOptionDescList table, int table_count, const char* name, int* argc_in_out, char** argv_in_out) XrmParseCommand;

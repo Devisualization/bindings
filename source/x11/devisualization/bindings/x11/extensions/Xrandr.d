@@ -33,7 +33,185 @@ import devisualization.bindings.x11.Xlib;
 import devisualization.bindings.x11.extensions.randr;
 import devisualization.bindings.x11.extensions.Xrender;
 import core.stdc.config : c_long, c_ulong;
-__gshared extern(C):
+
+mixin template XrandrFunctions() {
+	import devisualization.bindings.x11.extensions.Xrandr;
+	import devisualization.bindings.x11.X;
+    import devisualization.bindings.x11.Xlib;
+    import devisualization.bindings.x11.extensions.randr;
+    import devisualization.bindings.x11.extensions.Xrender;
+extern(C):
+
+    ///
+    Bool function(Display* dpy, int* event_base_return, int* error_base_return) XRRQueryExtension;
+    ///
+    Status function(Display* dpy, int* major_versiohn_return, int* minor_version_return) XRRQueryVersion;
+    ///
+    XRRScreenConfiguration* function(Display* dpy, Window window) XRRGetScreenInfo;
+    ///
+    void function(XRRScreenConfiguration* config) XRRFreeScreenConfigInfo;
+
+    ///
+    Status function(Display* dpy, XRRScreenConfiguration* config, Drawable draw, int size_index, Rotation rotation, Time timestamp) XRRSetScreenConfig;
+    /// added in v1.1, sorry for the lame name
+    Status function(Display* dpy, XRRScreenConfiguration* config, Drawable draw, int size_index, Rotation rotation, short rate, Time timestamp) XRRSetScreenConfigAndRate;
+
+    ///
+    Rotation function(XRRScreenConfiguration* config, Rotation* current_rotation) XRRConfigRotations;
+    ///
+    Time function(XRRScreenConfiguration* config, Time* config_timestamp) XRRConfigTimes;
+    ///
+    XRRScreenSize* function(XRRScreenConfiguration* config, int* nsizes) XRRConfigSizes;
+    ///
+    short* function(XRRScreenConfiguration* config, int sizeID, int* nrates) XRRConfigRates;
+    ///
+    SizeID function(XRRScreenConfiguration* config, Rotation* rotation) XRRConfigCurrentConfiguration;
+    ///
+    short function(XRRScreenConfiguration* config) XRRConfigCurrentRate;
+    ///
+    int function(Display* dpy, Window root) XRRRootToScreen;
+
+    /**
+     * returns the screen configuration for the specified screen; does a lazy
+     * evalution to delay getting the information, and caches the result.
+     * These routines should be used in preference to XRRGetScreenInfo
+     * to avoid unneeded round trips to the X server.  These are new
+     * in protocol version 0.1.
+     */
+    void function(Display* dpy, Window window, int mask) XRRSelectInput;
+
+    /*
+     * the following are always safe to call, even if RandR is not implemented
+     * on a screen
+     */
+
+    ///
+    Rotation function(Display* dpy, int screen, Rotation* current_rotation) XRRRotations;
+    ///
+    XRRScreenSize* function(Display* dpy, int screen, int* nsizes) XRRSizes;
+    ///
+    short* function(Display* dpy, int screen, int sizeID, int* nrates) XRRRates;
+    ///
+    Time function(Display* dpy, int screen, Time* config_timestamp) XRRTimes;
+
+    /* Version 1.2 additions */
+
+    /// despite returning a Status, this returns 1 for success
+    Status function(Display* dpy, Window window, int* minWidth, int* minHeight, int* maxWidth, int* maxHeight) XRRGetScreenSizeRange;
+    ///
+    void function(Display* dpy, Window window, int width, int height, int mmWidth, int mmHeight) XRRSetScreenSize;
+
+    ///
+    XRRScreenResources* function(Display* dpy, Window window) XRRGetScreenResources;
+
+    ///
+    void function(XRRScreenResources* resources) XRRFreeScreenResources;
+
+    ///
+    XRROutputInfo* function(Display* dpy, XRRScreenResources* resources, RROutput output) XRRGetOutputInfo;
+    ///
+    void function(XRROutputInfo* outputInfo) XRRFreeOutputInfo;
+    ///
+    Atom* function(Display* dpy, RROutput output, int* nprop) XRRListOutputProperties;
+
+    ///
+    XRRPropertyInfo* function(Display* dpy, RROutput output, Atom property) XRRQueryOutputProperty;
+    ///
+    void function(Display* dpy, RROutput output, Atom property, Bool pending, Bool range, int num_values, c_long* values) XRRConfigureOutputProperty;
+    ///
+    void function(Display* dpy, RROutput output, Atom property, Atom type, int format, int mode, const ubyte* data, int nelements) XRRChangeOutputProperty;
+    ///
+    void function(Display* dpy, RROutput output, Atom property) XRRDeleteOutputProperty;
+    ///
+    int function(Display* dpy, RROutput output, Atom property, c_long offset, c_long length, Bool _delete, Bool pending, Atom req_type, Atom* actual_type, int* actual_format, c_ulong* nitems, c_ulong* bytes_after, ubyte** prop) XRRGetOutputProperty;
+    ///
+    XRRModeInfo* function(const char* name, int nameLength) XRRAllocModeInfo;
+    ///
+    RRMode function(Display* dpy, Window window, XRRModeInfo* modeInfo) XRRCreateMode;
+    ///
+    void function(Display* dpy, RRMode mode) XRRDestroyMode;
+    ///
+    void function(Display* dpy, RROutput output, RRMode mode) XRRAddOutputMode;
+    ///
+    void function(Display* dpy, RROutput output, RRMode mode) XRRDeleteOutputMode;
+    ///
+    void function(XRRModeInfo* modeInfo) XRRFreeModeInfo;
+
+    ///
+    XRRCrtcInfo* function(Display* dpy, XRRScreenResources* resources, RRCrtc crtc) XRRGetCrtcInfo;
+    ///
+    void function(XRRCrtcInfo* crtcInfo) XRRFreeCrtcInfo;
+    ///
+    Status function(Display* dpy, XRRScreenResources* resources, RRCrtc crtc, Time timestamp, int x, int y, RRMode mode, Rotation rotation, RROutput* outputs, int noutputs) XRRSetCrtcConfig;
+    ///
+    int function(Display* dpy, RRCrtc crtc) XRRGetCrtcGammaSize;
+
+    ///
+    XRRCrtcGamma* function(Display* dpy, RRCrtc crtc) XRRGetCrtcGamma;
+    ///
+    XRRCrtcGamma* function(int size) XRRAllocGamma;
+    ///
+    void function(Display* dpy, RRCrtc crtc, XRRCrtcGamma* gamma) XRRSetCrtcGamma;
+    ///
+    void function(XRRCrtcGamma* gamma) XRRFreeGamma;
+
+    /* Version 1.3 additions */
+
+    ///
+    XRRScreenResources* function(Display* dpy, Window window) XRRGetScreenResourcesCurrent;
+    ///
+    void function(Display* dpy, RRCrtc crtc, XTransform *transform, const char* filter, XFixed* params, int nparams) XRRSetCrtcTransform;
+
+    /**
+     * Get current crtc transforms and filters.
+     * Pass *attributes to XFree to free
+     */
+    Status function(Display* dpy, RRCrtc crtc, XRRCrtcTransformAttributes** attributes) XRRGetCrtcTransform;
+
+    /**
+     * intended to take RRScreenChangeNotify, or
+     * ConfigureNotify (on the root window)
+     * returns 1 if it is an event type it understands, 0 if not
+     */
+    int function(XEvent* event) XRRUpdateConfiguration;
+
+    ///
+    XRRPanning* function(Display* dpy, XRRScreenResources* resources, RRCrtc crtc) XRRGetPanning;
+    ///
+    void function(XRRPanning* panning) XRRFreePanning;
+    ///
+    Status function(Display* dpy, XRRScreenResources* resources, RRCrtc crtc, XRRPanning* panning) XRRSetPanning;
+    ///
+    void function(Display* dpy, Window window, RROutput output) XRRSetOutputPrimary;
+    ///
+    RROutput function(Display* dpy, Window window) XRRGetOutputPrimary;
+
+    ///
+    XRRProviderResources* function(Display* dpy, Window window) XRRGetProviderResources;
+    ///
+    void function(XRRProviderResources* resources) XRRFreeProviderResources;
+
+    ///
+    XRRProviderInfo* function(Display* dpy, XRRScreenResources* resources, RRProvider provider) XRRGetProviderInfo;
+    ///
+    void function(XRRProviderInfo* provider) XRRFreeProviderInfo;
+    ///
+    int function(Display* dpy, XID provider, XID source_provider) XRRSetProviderOutputSource;
+    ///
+    int function(Display* dpy, XID provider, XID sink_provider) XRRSetProviderOffloadSink;
+    ///
+    Atom* function(Display* dpy, RRProvider provider, int* nprop) XRRListProviderProperties;
+    ///
+    XRRPropertyInfo* function(Display* dpy, RRProvider provider, Atom property) XRRQueryProviderProperty;
+    ///
+    void function(Display* dpy, RRProvider provider, Atom property, Bool pending, Bool range, int num_values, c_long* values) XRRConfigureProviderProperty;
+    ///
+    void function(Display* dpy, RRProvider provider, Atom property, Atom type, int format, int mode, const ubyte* data, int nelements) XRRChangeProviderProperty;
+    ///
+    void function(Display* dpy, RRProvider provider, Atom property) XRRDeleteProviderProperty;
+    ///
+    int function(Display* dpy, RRProvider provider, Atom property, c_long offset, c_long length, Bool _delete, Bool pending, Atom req_type, Atom* actual_type, int* actual_format, c_ulong* nitems, c_ulong* bytes_after, ubyte** prop) XRRGetProviderProperty;
+}
 
 ///
 alias RROutput = XID;
@@ -257,15 +435,6 @@ struct _XRRScreenConfiguration;
 ///
 alias XRRScreenConfiguration = _XRRScreenConfiguration;
 
-///
-Bool function(Display* dpy, int* event_base_return, int* error_base_return) XRRQueryExtension;
-///
-Status function(Display* dpy, int* major_versiohn_return, int* minor_version_return) XRRQueryVersion;
-///
-XRRScreenConfiguration* function(Display* dpy, Window window) XRRGetScreenInfo;
-///
-void function(XRRScreenConfiguration* config) XRRFreeScreenConfigInfo;
-
 /*
  * Note that screen configuration changes are only permitted if the client can
  * prove it has up to date configuration information.  We are trying to
@@ -273,56 +442,6 @@ void function(XRRScreenConfiguration* config) XRRFreeScreenConfigInfo;
  * we want to ensure the client knows what it is talking about when requesting
  * changes.
  */
-
-///
-Status function(Display* dpy, XRRScreenConfiguration* config, Drawable draw, int size_index, Rotation rotation, Time timestamp) XRRSetScreenConfig;
-/// added in v1.1, sorry for the lame name
-Status function(Display* dpy, XRRScreenConfiguration* config, Drawable draw, int size_index, Rotation rotation, short rate, Time timestamp) XRRSetScreenConfigAndRate;
-
-///
-Rotation function(XRRScreenConfiguration* config, Rotation* current_rotation) XRRConfigRotations;
-///
-Time function(XRRScreenConfiguration* config, Time* config_timestamp) XRRConfigTimes;
-///
-XRRScreenSize* function(XRRScreenConfiguration* config, int* nsizes) XRRConfigSizes;
-///
-short* function(XRRScreenConfiguration* config, int sizeID, int* nrates) XRRConfigRates;
-///
-SizeID function(XRRScreenConfiguration* config, Rotation* rotation) XRRConfigCurrentConfiguration;
-///
-short function(XRRScreenConfiguration* config) XRRConfigCurrentRate;
-///
-int function(Display* dpy, Window root) XRRRootToScreen;
-
-/**
- * returns the screen configuration for the specified screen; does a lazy
- * evalution to delay getting the information, and caches the result.
- * These routines should be used in preference to XRRGetScreenInfo
- * to avoid unneeded round trips to the X server.  These are new
- * in protocol version 0.1.
- */
-void function(Display* dpy, Window window, int mask) XRRSelectInput;
-
-/*
- * the following are always safe to call, even if RandR is not implemented
- * on a screen
- */
-
-///
-Rotation function(Display* dpy, int screen, Rotation* current_rotation) XRRRotations;
-///
-XRRScreenSize* function(Display* dpy, int screen, int* nsizes) XRRSizes;
-///
-short* function(Display* dpy, int screen, int sizeID, int* nrates) XRRRates;
-///
-Time function(Display* dpy, int screen, Time* config_timestamp) XRRTimes;
-
-/* Version 1.2 additions */
-
-/// despite returning a Status, this returns 1 for success
-Status function(Display* dpy, Window window, int* minWidth, int* minHeight, int* maxWidth, int* maxHeight) XRRGetScreenSizeRange;
-///
-void function(Display* dpy, Window window, int width, int height, int mmWidth, int mmHeight) XRRSetScreenSize;
 
 ///
 alias XRRModeFlags = c_ulong;
@@ -386,12 +505,6 @@ struct _XRRScreenResources {
 alias XRRScreenResources = _XRRScreenResources;
 
 ///
-XRRScreenResources* function(Display* dpy, Window window) XRRGetScreenResources;
-
-///
-void function(XRRScreenResources* resources) XRRFreeScreenResources;
-
-///
 struct _XRROutputInfo {
 	///
 	Time timestamp;
@@ -429,13 +542,6 @@ struct _XRROutputInfo {
 alias XRROutputInfo = _XRROutputInfo;
 
 ///
-XRROutputInfo* function(Display* dpy, XRRScreenResources* resources, RROutput output) XRRGetOutputInfo;
-///
-void function(XRROutputInfo* outputInfo) XRRFreeOutputInfo;
-///
-Atom* function(Display* dpy, RROutput output, int* nprop) XRRListOutputProperties;
-
-///
 struct XRRPropertyInfo {
 	///
 	Bool pending;
@@ -448,29 +554,6 @@ struct XRRPropertyInfo {
 	///
 	c_long* values;
 }
-
-///
-XRRPropertyInfo* function(Display* dpy, RROutput output, Atom property) XRRQueryOutputProperty;
-///
-void function(Display* dpy, RROutput output, Atom property, Bool pending, Bool range, int num_values, c_long* values) XRRConfigureOutputProperty;
-///
-void function(Display* dpy, RROutput output, Atom property, Atom type, int format, int mode, const ubyte* data, int nelements) XRRChangeOutputProperty;
-///
-void function(Display* dpy, RROutput output, Atom property) XRRDeleteOutputProperty;
-///
-int function(Display* dpy, RROutput output, Atom property, c_long offset, c_long length, Bool _delete, Bool pending, Atom req_type, Atom* actual_type, int* actual_format, c_ulong* nitems, c_ulong* bytes_after, ubyte** prop) XRRGetOutputProperty;
-///
-XRRModeInfo* function(const char* name, int nameLength) XRRAllocModeInfo;
-///
-RRMode function(Display* dpy, Window window, XRRModeInfo* modeInfo) XRRCreateMode;
-///
-void function(Display* dpy, RRMode mode) XRRDestroyMode;
-///
-void function(Display* dpy, RROutput output, RRMode mode) XRRAddOutputMode;
-///
-void function(Display* dpy, RROutput output, RRMode mode) XRRDeleteOutputMode;
-///
-void function(XRRModeInfo* modeInfo) XRRFreeModeInfo;
 
 ///
 struct _XRRCrtcInfo {
@@ -500,15 +583,6 @@ struct _XRRCrtcInfo {
 alias XRRCrtcInfo = _XRRCrtcInfo;
 
 ///
-XRRCrtcInfo* function(Display* dpy, XRRScreenResources* resources, RRCrtc crtc) XRRGetCrtcInfo;
-///
-void function(XRRCrtcInfo* crtcInfo) XRRFreeCrtcInfo;
-///
-Status function(Display* dpy, XRRScreenResources* resources, RRCrtc crtc, Time timestamp, int x, int y, RRMode mode, Rotation rotation, RROutput* outputs, int noutputs) XRRSetCrtcConfig;
-///
-int function(Display* dpy, RRCrtc crtc) XRRGetCrtcGammaSize;
-
-///
 struct _XRRCrtcGamma {
 	///
 	int size;
@@ -522,22 +596,6 @@ struct _XRRCrtcGamma {
 
 ///
 alias XRRCrtcGamma = _XRRCrtcGamma;
-
-///
-XRRCrtcGamma* function(Display* dpy, RRCrtc crtc) XRRGetCrtcGamma;
-///
-XRRCrtcGamma* function(int size) XRRAllocGamma;
-///
-void function(Display* dpy, RRCrtc crtc, XRRCrtcGamma* gamma) XRRSetCrtcGamma;
-///
-void function(XRRCrtcGamma* gamma) XRRFreeGamma;
-
-/* Version 1.3 additions */
-
-/// 
-XRRScreenResources* function(Display* dpy, Window window) XRRGetScreenResourcesCurrent;
-///
-void function(Display* dpy, RRCrtc crtc, XTransform *transform, const char* filter, XFixed* params, int nparams) XRRSetCrtcTransform;
 
 ///
 struct _XRRCrtcTransformAttributes {
@@ -561,19 +619,6 @@ struct _XRRCrtcTransformAttributes {
 
 ///
 alias XRRCrtcTransformAttributes = _XRRCrtcTransformAttributes;
-
-/**
- * Get current crtc transforms and filters.
- * Pass *attributes to XFree to free
- */
-Status function(Display* dpy, RRCrtc crtc, XRRCrtcTransformAttributes** attributes) XRRGetCrtcTransform;
-
-/**
- * intended to take RRScreenChangeNotify, or
- * ConfigureNotify (on the root window)
- * returns 1 if it is an event type it understands, 0 if not
- */
-int function(XEvent* event) XRRUpdateConfiguration;
 
 ///
 struct _XRRPanning {
@@ -609,17 +654,6 @@ struct _XRRPanning {
 alias XRRPanning = _XRRPanning;
 
 ///
-XRRPanning* function(Display* dpy, XRRScreenResources* resources, RRCrtc crtc) XRRGetPanning;
-///
-void function(XRRPanning* panning) XRRFreePanning;
-///
-Status function(Display* dpy, XRRScreenResources* resources, RRCrtc crtc, XRRPanning* panning) XRRSetPanning;
-///
-void function(Display* dpy, Window window, RROutput output) XRRSetOutputPrimary;
-///
-RROutput function(Display* dpy, Window window) XRRGetOutputPrimary;
-
-///
 struct _XRRProviderResources {
 	///
 	Time timestamp;
@@ -631,10 +665,6 @@ struct _XRRProviderResources {
 
 ///
 alias XRRProviderResources = _XRRProviderResources;
-///
-XRRProviderResources* function(Display* dpy, Window window) XRRGetProviderResources;
-///
-void function(XRRProviderResources* resources) XRRFreeProviderResources;
 
 ///
 struct _XRRProviderInfo {
@@ -663,23 +693,3 @@ struct _XRRProviderInfo {
 ///
 alias XRRProviderInfo = _XRRProviderInfo;
 
-///
-XRRProviderInfo* function(Display* dpy, XRRScreenResources* resources, RRProvider provider) XRRGetProviderInfo;
-///
-void function(XRRProviderInfo* provider) XRRFreeProviderInfo;
-///
-int function(Display* dpy, XID provider, XID source_provider) XRRSetProviderOutputSource;
-///
-int function(Display* dpy, XID provider, XID sink_provider) XRRSetProviderOffloadSink;
-///
-Atom* function(Display* dpy, RRProvider provider, int* nprop) XRRListProviderProperties;
-///
-XRRPropertyInfo* function(Display* dpy, RRProvider provider, Atom property) XRRQueryProviderProperty;
-///
-void function(Display* dpy, RRProvider provider, Atom property, Bool pending, Bool range, int num_values, c_long* values) XRRConfigureProviderProperty;
-///
-void function(Display* dpy, RRProvider provider, Atom property, Atom type, int format, int mode, const ubyte* data, int nelements) XRRChangeProviderProperty;
-///
-void function(Display* dpy, RRProvider provider, Atom property) XRRDeleteProviderProperty;
-///
-int function(Display* dpy, RRProvider provider, Atom property, c_long offset, c_long length, Bool _delete, Bool pending, Atom req_type, Atom* actual_type, int* actual_format, c_ulong* nitems, c_ulong* bytes_after, ubyte** prop) XRRGetProviderProperty;

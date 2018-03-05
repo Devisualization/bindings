@@ -6,6 +6,7 @@
  *              http://www.boost.org/LICENSE_1_0.txt)
  */
 module devisualization.bindings.x11;
+public import devisualization.bindings.x11.loader;
 public import devisualization.bindings.x11.keysym;
 public import devisualization.bindings.x11.keysymdef;
 public import devisualization.bindings.x11.X;

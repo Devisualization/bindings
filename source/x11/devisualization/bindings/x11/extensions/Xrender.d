@@ -28,7 +28,107 @@ import devisualization.bindings.x11.Xlib;
 import devisualization.bindings.x11.Xutil;
 import devisualization.bindings.x11.extensions.render;
 import core.stdc.config : c_long, c_ulong;
-__gshared extern(C):
+
+mixin template XrenderFunctions() {
+	import devisualization.bindings.x11.extensions.Xrender;
+    import devisualization.bindings.x11.X;
+    import devisualization.bindings.x11.Xlib;
+    import devisualization.bindings.x11.Xutil;
+    import devisualization.bindings.x11.extensions.render;
+    import core.stdc.config : c_long, c_ulong;
+extern(C):
+
+    ///
+    Bool function(Display* dpy, int* event_basep, int* error_basep) XRenderQueryExtension;
+    ///
+    Status function(Display* dpy, int* major_versionp, int* minor_versionp) XRenderQueryVersion;
+    ///
+    Status function(Display* dpy) XRenderQueryFormats;
+    ///
+    int function(Display* dpy, int screen) XRenderQuerySubpixelOrder;
+    ///
+    Bool function(Display* dpy, int screen, int subpixel) XRenderSetSubpixelOrder;
+    ///
+    XRenderPictFormat* function(Display* dpy, const Visual* visual) XRenderFindVisualFormat;
+    ///
+    XRenderPictFormat* function(Display* dpy, c_ulong mask, const XRenderPictFormat* templ, int count) XRenderFindFormat;
+
+    ///
+    XRenderPictFormat* function(Display* dpy, int format) XRenderFindStandardFormat;
+    ///
+    XIndexValue* function(Display* dpy, const XRenderPictFormat* format, int* num) XRenderQueryPictIndexValues;
+    ///
+    Picture function(Display* dpy, Drawable drawable, const XRenderPictFormat* format, c_ulong valuemask, const XRenderPictureAttributes* attributes) XRenderCreatePicture;
+    ///
+    void function(Display* dpy, Picture picture, c_ulong valuemask, const XRenderPictureAttributes* attributes) XRenderChangePicture;
+    ///
+    void function(Display* dpy, Picture picture, int xOrigin, int yOrigin, const XRectangle* rects, int n) XRenderSetPictureClipRectangles;
+    ///
+    void function(Display* dpy, Picture picture, Region r) XRenderSetPictureClipRegion;
+    ///
+    void function(Display* dpy, Picture picture, XTransform* transform) XRenderSetPictureTransform;
+    ///
+    void function(Display* dpy, Picture picture) XRenderFreePicture;
+    ///
+    void function(Display* dpy, int op, Picture src, Picture mask, Picture dst, int src_x, int src_y, int mask_x, int mask_y, int dst_x, int dst_y, uint width, uint height) XRenderComposite;
+    ///
+    GlyphSet function(Display* dpy, const XRenderPictFormat* format) XRenderCreateGlyphSet;
+    ///
+    GlyphSet function(Display* dpy, GlyphSet existing) XRenderReferenceGlyphSet;
+    ///
+    void function(Display* dpy, GlyphSet glyphset) XRenderFreeGlyphSet;
+    ///
+    void function(Display* dpy, GlyphSet glyphset, const Glyph* gids, const XGlyphInfo* glyphs, int nglyphs, const char* images, int nbyte_images) XRenderAddGlyphs;
+    ///
+    void function(Display* dpy, GlyphSet glyphset, const Glyph* gids, int nglyphs) XRenderFreeGlyphs;
+    ///
+    void function(Display* dpy, int op, Picture src, Picture dst, const XRenderPictFormat* maskFormat, GlyphSet glyphset, int xSrc, int ySrc, int xDst, int yDst, const char* string, int nchar) XRenderCompositeString8;
+    ///
+    void function(Display* dpy, int op, Picture src, Picture dst, const XRenderPictFormat* maskFormat, GlyphSet glyphset, int xSrc, int ySrc, int xDst, int yDst, const wchar* string, int nchar) XRenderCompositeString16;
+    ///
+    void function(Display* dpy, int op, Picture src, Picture dst, const XRenderPictFormat* maskFormat, GlyphSet glyphset, int xSrc, int ySrc, int xDst, int yDst, const dchar* string, int nchar) XRenderCompositeString32;
+    ///
+    void function(Display* dpy, int op, Picture src, Picture dst,const XRenderPictFormat* maskFormat, int xSrc, int ySrc, int xDst, int yDst, const XGlyphElt8* elts, int nelt) XRenderCompositeText8;
+    ///
+    void function(Display* dpy, int op, Picture src, Picture dst, const XRenderPictFormat* maskFormat, int xSrc, int ySrc, int xDst, int yDst, const XGlyphElt16* elts, int nelt) XRenderCompositeText16;
+    ///
+    void function(Display* dpy, int op, Picture src, Picture dst, const XRenderPictFormat* maskFormat, int xSrc, int ySrc, int xDst, int yDst, const XGlyphElt32* elts, int nelt) XRenderCompositeText32;
+    ///
+    void function(Display* dpy, int op, Picture dst, const XRenderColor* color, int x, int y, uint width, uint height) XRenderFillRectangle;
+    ///
+    void function(Display* dpy, int op, Picture dst, const XRenderColor* color, const XRectangle* rectangles, int n_rects) XRenderFillRectangles;
+    ///
+    void function(Display* dpy, int op, Picture src, Picture dst, const XRenderPictFormat* maskFormat, int xSrc, int ySrc, const XTrapezoid* traps, int ntrap) XRenderCompositeTrapezoids;
+    ///
+    void function(Display* dpy, int op, Picture src, Picture dst, const XRenderPictFormat* maskFormat, int xSrc, int ySrc, const XTriangle* triangles, int ntriangle) XRenderCompositeTriangles;
+    ///
+    void function(Display* dpy, int op, Picture src, Picture dst, const XRenderPictFormat* maskFormat, int xSrc, int ySrc, const XPointFixed* points, int npoint) XRenderCompositeTriStrip;
+    ///
+    void function(Display* dpy, int op, Picture src, Picture dst, const XRenderPictFormat* maskFormat, int xSrc, int ySrc, const XPointFixed* points, int npoint) XRenderCompositeTriFan;
+    ///
+    void function(Display* dpy, int op, Picture src, Picture dst, const XRenderPictFormat* maskFormat, int xSrc, int ySrc, int xDst, int yDst, const XPointDouble* fpoints, int npoints, int winding) XRenderCompositeDoublePoly;
+    ///
+    Status function(Display* dpy, ubyte* spec, XRenderColor* def) XRenderParseColor;
+    ///
+    Cursor function(Display* dpy, Picture source, uint x, uint y) XRenderCreateCursor;
+    ///
+    XFilters* function(Display* dpy, Drawable drawable) XRenderQueryFilters;
+    ///
+    void function(Display* dpy, Picture picture, const char* filter, XFixed* params, int nparams) XRenderSetPictureFilter;
+    ///
+    Cursor function(Display* dpy, int ncursor, XAnimCursor* cursors) XRenderCreateAnimCursor;
+    ///
+    void function(Display* dpy, Picture picture, int xOff, int yOff, const XTrap* traps, int ntrap) XRenderAddTraps;
+    ///
+    Picture function(Display* dpy, const XRenderColor* color) XRenderCreateSolidFill;
+    ///
+    Picture function(Display* dpy, const XLinearGradient* gradient, const XFixed* stops, const XRenderColor* colors, int nstops) XRenderCreateLinearGradient;
+    ///
+    Picture function(Display* dpy, const XRadialGradient* gradient, const XFixed* stops, const XRenderColor* colors, int nstops) XRenderCreateRadialGradient;
+    ///
+    Picture function(Display* dpy, const XConicalGradient* gradient, const XFixed* stops, const XRenderColor* colors, int nstops) XRenderCreateConicalGradient;
+}
+
 
 ///
 struct XRenderDirectFormat {
@@ -376,100 +476,19 @@ struct _XConicalGradient {
 alias XConicalGradient = _XConicalGradient;
 
 ///
-Bool XRenderQueryExtension(Display* dpy, int* event_basep, int* error_basep);
-///
-Status XRenderQueryVersion(Display* dpy, int* major_versionp, int* minor_versionp);
-///
-Status XRenderQueryFormats (Display* dpy);
-///
-int XRenderQuerySubpixelOrder (Display* dpy, int screen);
-///
-Bool XRenderSetSubpixelOrder (Display* dpy, int screen, int subpixel);
-///
-XRenderPictFormat* XRenderFindVisualFormat(Display* dpy, const Visual* visual);
-///
-XRenderPictFormat* XRenderFindFormat(Display* dpy, c_ulong mask, const XRenderPictFormat* templ, int count);
-
 enum {
+	///
 	PictStandardARGB32 = 0,
+	///
 	PictStandardRGB24 = 1,
+	///
 	PictStandardA8 = 2,
+	///
 	PictStandardA4 = 3,
+	///
 	PictStandardA1 = 4,
+	///
 	PictStandardNUM = 5
+	///
 }
 
-///
-XRenderPictFormat* function(Display* dpy, int format) XRenderFindStandardFormat;
-///
-XIndexValue* function(Display* dpy, const XRenderPictFormat* format, int* num) XRenderQueryPictIndexValues;
-///
-Picture function(Display* dpy, Drawable drawable, const XRenderPictFormat* format, c_ulong valuemask, const XRenderPictureAttributes* attributes) XRenderCreatePicture;
-///
-void function(Display* dpy, Picture picture, c_ulong valuemask, const XRenderPictureAttributes* attributes) XRenderChangePicture;
-///
-void function(Display* dpy, Picture picture, int xOrigin, int yOrigin, const XRectangle* rects, int n) XRenderSetPictureClipRectangles;
-///
-void function(Display* dpy, Picture picture, Region r) XRenderSetPictureClipRegion;
-///
-void function(Display* dpy, Picture picture, XTransform* transform) XRenderSetPictureTransform;
-///
-void function(Display* dpy, Picture picture) XRenderFreePicture;
-///
-void function(Display* dpy, int op, Picture src, Picture mask, Picture dst, int src_x, int src_y, int mask_x, int mask_y, int dst_x, int dst_y, uint width, uint height) XRenderComposite;
-///
-GlyphSet function(Display* dpy, const XRenderPictFormat* format) XRenderCreateGlyphSet;
-///
-GlyphSet function(Display* dpy, GlyphSet existing) XRenderReferenceGlyphSet;
-///
-void function(Display* dpy, GlyphSet glyphset) XRenderFreeGlyphSet;
-///
-void function(Display* dpy, GlyphSet glyphset, const Glyph* gids, const XGlyphInfo* glyphs, int nglyphs, const char* images, int nbyte_images) XRenderAddGlyphs;
-///
-void function(Display* dpy, GlyphSet glyphset, const Glyph* gids, int nglyphs) XRenderFreeGlyphs;
-///
-void function(Display* dpy, int op, Picture src, Picture dst, const XRenderPictFormat* maskFormat, GlyphSet glyphset, int xSrc, int ySrc, int xDst, int yDst, const char* string, int nchar) XRenderCompositeString8;
-///
-void function(Display* dpy, int op, Picture src, Picture dst, const XRenderPictFormat* maskFormat, GlyphSet glyphset, int xSrc, int ySrc, int xDst, int yDst, const wchar* string, int nchar) XRenderCompositeString16;
-///
-void function(Display* dpy, int op, Picture src, Picture dst, const XRenderPictFormat* maskFormat, GlyphSet glyphset, int xSrc, int ySrc, int xDst, int yDst, const dchar* string, int nchar) XRenderCompositeString32;
-///
-void function(Display* dpy, int op, Picture src, Picture dst,const XRenderPictFormat* maskFormat, int xSrc, int ySrc, int xDst, int yDst, const XGlyphElt8* elts, int nelt) XRenderCompositeText8;
-///
-void function(Display* dpy, int op, Picture src, Picture dst, const XRenderPictFormat* maskFormat, int xSrc, int ySrc, int xDst, int yDst, const XGlyphElt16* elts, int nelt) XRenderCompositeText16;
-///
-void function(Display* dpy, int op, Picture src, Picture dst, const XRenderPictFormat* maskFormat, int xSrc, int ySrc, int xDst, int yDst, const XGlyphElt32* elts, int nelt) XRenderCompositeText32;
-///
-void function(Display* dpy, int op, Picture dst, const XRenderColor* color, int x, int y, uint width, uint height) XRenderFillRectangle;
-///
-void function(Display* dpy, int op, Picture dst, const XRenderColor* color, const XRectangle* rectangles, int n_rects) XRenderFillRectangles;
-///
-void function(Display* dpy, int op, Picture src, Picture dst, const XRenderPictFormat* maskFormat, int xSrc, int ySrc, const XTrapezoid* traps, int ntrap) XRenderCompositeTrapezoids;
-///
-void function(Display* dpy, int op, Picture src, Picture dst, const XRenderPictFormat* maskFormat, int xSrc, int ySrc, const XTriangle* triangles, int ntriangle) XRenderCompositeTriangles;
-///
-void function(Display* dpy, int op, Picture src, Picture dst, const XRenderPictFormat* maskFormat, int xSrc, int ySrc, const XPointFixed* points, int npoint) XRenderCompositeTriStrip;
-///
-void function(Display* dpy, int op, Picture src, Picture dst, const XRenderPictFormat* maskFormat, int xSrc, int ySrc, const XPointFixed* points, int npoint) XRenderCompositeTriFan;
-///
-void function(Display* dpy, int op, Picture src, Picture dst, const XRenderPictFormat* maskFormat, int xSrc, int ySrc, int xDst, int yDst, const XPointDouble* fpoints, int npoints, int winding) XRenderCompositeDoublePoly;
-///
-Status function(Display* dpy, ubyte* spec, XRenderColor* def) XRenderParseColor;
-///
-Cursor function(Display* dpy, Picture source, uint x, uint y) XRenderCreateCursor;
-///
-XFilters* function(Display* dpy, Drawable drawable) XRenderQueryFilters;
-///
-void function(Display* dpy, Picture picture, const char* filter, XFixed* params, int nparams) XRenderSetPictureFilter;
-///
-Cursor function(Display* dpy, int ncursor, XAnimCursor* cursors) XRenderCreateAnimCursor;
-///
-void function(Display* dpy, Picture picture, int xOff, int yOff, const XTrap* traps, int ntrap) XRenderAddTraps;
-///
-Picture function(Display* dpy, const XRenderColor* color) XRenderCreateSolidFill;
-///
-Picture function(Display* dpy, const XLinearGradient* gradient, const XFixed* stops, const XRenderColor* colors, int nstops) XRenderCreateLinearGradient;
-///
-Picture function(Display* dpy, const XRadialGradient* gradient, const XFixed* stops, const XRenderColor* colors, int nstops) XRenderCreateRadialGradient;
-///
-Picture function(Display* dpy, const XConicalGradient* gradient, const XFixed* stops, const XRenderColor* colors, int nstops) XRenderCreateConicalGradient; 

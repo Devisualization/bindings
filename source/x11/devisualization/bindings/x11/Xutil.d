@@ -1,4 +1,4 @@
-﻿/**
+/**
 
 Copyright 1987, 1998  The Open Group
 
@@ -51,7 +51,196 @@ import devisualization.bindings.x11.keysym;
 import devisualization.bindings.x11.keysymdef;
 import devisualization.bindings.x11.Xresource;
 import core.stdc.config : c_long, c_ulong;
-__gshared extern(C):
+
+mixin template XUtilFunctions() {
+	import devisualization.bindings.x11.X;
+	import devisualization.bindings.x11.Xlib;
+	import devisualization.bindings.x11.Xutil;
+extern(C):
+
+	///
+	version(XUTIL_DEFINE_FUNCTIONS) {
+		///
+		int function(XImage* ximage) XDestroyImage;
+		///
+		c_ulong function(XImage* ximage, int x, int y) XGetPixel;
+		///
+		int function(XImage* ximage, int x, int y, c_ulong pixel) XPutPixel;
+		///
+		XImage* function(XImage* ximage, int x, int y, uint width, uint height) XSubImage;
+		///
+		int function(XImage* ximage, c_long value) XAddPixel;
+
+	///
+	} else {
+		/*
+		 * These macros are used to give some sugar to the image routines so that
+		 * naive people are more comfortable with them.
+		 */
+
+		///
+		int XDestroyImage(XImage* ximage) { return ximage.f.destroy_image(ximage); }
+		///
+		c_ulong XGetPixel(XImage* ximage, int x, int y) { return ximage.f.get_pixel(ximage, x, y); }
+		///
+		int XPutPixel(XImage* ximage, int x, int y, c_ulong pixel) { return ximage.f.put_pixel(ximage, x, y, pixel); }
+		///
+		XImage* XSubImage(XImage* ximage, int x, int y, uint width, uint height) { return ximage.f.sub_pixel(ximage, x, y, width, height); }
+		///
+		int XAddPixel(XImage* ximage, c_long value) { return ximage.f.add_pixel(ximage, value); }
+	}
+
+	/* The following declarations are alphabetized. */
+
+	///
+	XClassHint* function() XAllocClassHint;
+	///
+	XIconSize* function() XAllocIconSize;
+	///
+	XSizeHints* function() XAllocSizeHints;
+	///
+	XStandardColormap* function() XAllocStandardColormap;
+	///
+	XWMHints* function() XAllocWMHints;
+	///
+	int function(Region r, XRectangle* rect_return) XClipBox;
+	///
+	Region function() XCreateRegion;
+	///
+	const char* function() XDefaultString;
+	///
+	int function(Display* display, XID rid, XContext context) XDeleteContext;
+	///
+	int function(Region r) XDestroyRegion;
+	///
+	int function(Region r) XEmptyRegion;
+	///
+	int function(Region r1, Region r2) XEqualRegion;
+	///
+	int function(Display* display, XID rid, XContext context, XPointer* data_return) XFindContext;
+	///
+	Status function(Display* display, Window w, XClassHint* class_hints_return) XGetClassHint;
+	///
+	Status function(Display* display, Window w, XIconSize** size_list_return, int* count_return) XGetIconSizes;
+	///
+	Status function(Display* display, Window w, XSizeHints* hints_return) XGetNormalHints;
+	///
+	Status function(Display* display, Window w, XStandardColormap** stdcmap_return, int* count_return, Atom property) XGetRGBColormaps;
+	///
+	Status function(Display* display, Window w, XSizeHints* hints_return, Atom property) XGetSizeHints;
+	///
+	Status function(Display* display, Window w, XStandardColormap* colormap_return, Atom property) XGetStandardColormap;
+	///
+	Status function(Display* display, Window window, XTextProperty* text_prop_return, Atom property) XGetTextProperty;
+	///
+	XVisualInfo* function(Display* display, c_long vinfo_mask, XVisualInfo* vinfo_template, int*  nitems_return) XGetVisualInfo;
+	///
+	Status function(Display* display, Window w, XTextProperty* text_prop_return) XGetWMClientMachine;
+	///
+	XWMHints* function(Display* display, Window w) XGetWMHints;
+	///
+	Status function(Display* display, Window w, XTextProperty* text_prop_return) XGetWMIconName;
+	///
+	Status function(Display* display, Window w, XTextProperty* text_prop_return) XGetWMName;
+	///
+	Status function(Display* display, Window w, XSizeHints* hints_return, c_long* supplied_return) XGetWMNormalHints;
+	///
+	Status function(Display* display, Window w, XSizeHints* hints_return, c_long* supplied_return, Atom property) XGetWMSizeHints;
+	///
+	Status function(Display* display, Window w, XSizeHints* zhints_return) XGetZoomHints;
+	///
+	int function(Region sra, Region srb, Region dr_return) XIntersectRegion;
+	///
+	void function(KeySym sym, KeySym* lower, KeySym* upper) XConvertCase;
+	///
+	int function(XKeyEvent* event_struct, char* buffer_return, int bytes_buffer, KeySym* keysym_return, XComposeStatus* status_in_out) XLookupString;
+	///
+	Status function(Display* display, int screen, int depth, int class_, XVisualInfo* vinfo_return) XMatchVisualInfo;
+	///
+	int function(Region r, int dx, int dy) XOffsetRegion;
+	///
+	Bool function(Region r, int x, int y) XPointInRegion;
+	///
+	Region function(XPoint* points, int n, int fill_rule) XPolygonRegion;
+	///
+	int function(Region r, int x, int y, uint width, uint height) XRectInRegion;
+	///
+	int function(Display* display, XID rid, XContext context, const char* data) XSaveContext;
+	///
+	int function(Display* display, Window w, XClassHint* class_hints) XSetClassHint;
+	///
+	int function(Display* display, Window w, XIconSize* size_list, int count) XSetIconSizes;
+	///
+	int function(Display* display, Window w, XSizeHints* hints) XSetNormalHints;
+	///
+	void function(Display* display, Window w, XStandardColormap* stdcmaps, int count, Atom property) XSetRGBColormaps;
+	///
+	int function(Display* display, Window w, XSizeHints* hints, Atom property) XSetSizeHints;
+	///
+	int function(Display* display, Window w, const char* window_name, const char* icon_name, Pixmap icon_pixmap, char** argv, int argc, XSizeHints* hints) XSetStandardProperties;
+	///
+	void function(Display* display, Window w, XTextProperty* text_prop, Atom property) XSetTextProperty;
+	///
+	void function(Display* display, Window w, XTextProperty* text_prop) XSetWMClientMachine;
+	///
+	int function(Display* display, Window w, XWMHints* wm_hints) XSetWMHints;
+	///
+	void function(Display* display, Window w, XTextProperty* text_prop) XSetWMIconName;
+	///
+	void function(Display* display, Window w, XTextProperty* text_prop) XSetWMName;
+	///
+	void function(Display* display, Window w, XSizeHints* hints) XSetWMNormalHints;
+	///
+	void function(Display* display, Window w, XTextProperty* window_name, XTextProperty* icon_name, char** argv, int argc, XSizeHints* normal_hints, XWMHints* wm_hints, XClassHint* class_hints) XSetWMProperties;
+	///
+	void function(Display* display, Window w, const char* window_name, const char* icon_name, char** argv, int argc, XSizeHints* normal_hints, XWMHints* wm_hints, XClassHint* class_hints) XmbSetWMProperties;
+	///
+	void function(Display* display, Window w, const char* window_name, const char* icon_name, char** argv, int argc, XSizeHints* normal_hints, XWMHints* wm_hints, XClassHint* class_hints) Xutf8SetWMProperties;
+	///
+	void function(Display* display, Window w, XSizeHints* hints, Atom property) XSetWMSizeHints;
+	///
+	int function(Display* display, GC gc, Region r) XSetRegion;
+	///
+	void function(Display* display, Window w, XStandardColormap* colormap, Atom property) XSetStandardColormap;
+	///
+	int function(Display* display, Window w, XSizeHints* zhints) XSetZoomHints;
+	///
+	int function(Region r, int dx, int dy) XShrinkRegion;
+	///
+	Status function(char** list, int count, XTextProperty* text_prop_return) XStringListToTextProperty;
+	///
+	int function(Region sra, Region srb, Region dr_return) XSubtractRegion;
+	///
+	int function(Display* display, char** list, int count, XICCEncodingStyle style, XTextProperty* text_prop_return) XmbTextListToTextProperty;
+	///
+	int function(Display* display, wchar_t** list, int count, XICCEncodingStyle style, XTextProperty* text_prop_return) XwcTextListToTextProperty;
+	///
+	int function(Display* display, char** list, int count, XICCEncodingStyle style, XTextProperty* text_prop_return) Xutf8TextListToTextProperty;
+	///
+	void function(wchar_t** list) XwcFreeStringList;
+	///
+	Status function(XTextProperty* text_prop, char*** list_return, int* count_return) XTextPropertyToStringList;
+	///
+	int function(Display* display, const XTextProperty* text_prop, char*** list_return, int* count_return) XmbTextPropertyToTextList;
+	///
+	int function(Display* display, const XTextProperty* text_prop, wchar_t*** list_return, int* count_return) XwcTextPropertyToTextList;
+	///
+	int function(Display* display, const XTextProperty* text_prop, char*** list_return, int* count_return) Xutf8TextPropertyToTextList;
+	///
+	int function(XRectangle* rectangle, Region src_region, Region dest_region_return) XUnionRectWithRegion;
+	///
+	int function(Region sra, Region srb, Region dr_return) XUnionRegion;
+	///
+	int function(Display* display, int screen_number, const char* user_geometry, const char* default_geometry, uint border_width, XSizeHints* hints, int* x_return, int* y_return, int* width_return, int* height_return, int* gravity_return) XWMGeometry;
+	///
+	int function(Region sra, Region srb, Region dr_return) XXorRegion;
+
+	///
+	XContext XUniqueContext() { return cast(XContext)XrmUniqueQuark(); }
+	///
+	XContext XStringToContext(const char* string_) { return cast(XContext)XrmStringToQuark(string_); }
+}
+
 
 /**
  * Bitmask returned by XParseGeometry().  Each bit tells if the corresponding
@@ -272,38 +461,6 @@ struct XClassHint {
 	char* res_class;
 }
 
-///
-version(XUTIL_DEFINE_FUNCTIONS) {
-	///
-	int function(XImage* ximage) XDestroyImage;
-	///
-	c_ulong function(XImage* ximage, int x, int y) XGetPixel;
-	///
-	int function(XImage* ximage, int x, int y, c_ulong pixel) XPutPixel;
-	///
-	XImage* function(XImage* ximage, int x, int y, uint width, uint height) XSubImage;
-	///
-	int function(XImage* ximage, c_long value) XAddPixel;
-
-///
-} else {
-	/*
-	 * These macros are used to give some sugar to the image routines so that
-	 * naive people are more comfortable with them.
-	 */
-
-	///
-	int XDestroyImage(XImage* ximage) { return ximage.f.destroy_image(ximage); }
-	///
-	c_ulong XGetPixel(XImage* ximage, int x, int y) { return ximage.f.get_pixel(ximage, x, y); } 
-	///
-	int XPutPixel(XImage* ximage, int x, int y, c_ulong pixel) { return ximage.f.put_pixel(ximage, x, y, pixel); }
-	///
-	XImage* XSubImage(XImage* ximage, int x, int y, uint width, uint height) { return ximage.f.sub_pixel(ximage, x, y, width, height); }
-	///
-	int XAddPixel(XImage* ximage, c_long value) { return ximage.f.add_pixel(ximage, value); }
-}
-
 /**
  * Compose sequence status structure, used in calling XLookupString.
  */
@@ -475,152 +632,3 @@ enum {
 ///
 alias XContext = int;
 
-///
-XContext XUniqueContext() { return cast(XContext)XrmUniqueQuark(); }
-///
-XContext XStringToContext(const char* string_) { return cast(XContext)XrmStringToQuark(string_); }
-
-/* The following declarations are alphabetized. */
-
-///
-XClassHint* function() XAllocClassHint;
-///
-XIconSize* function() XAllocIconSize;
-///
-XSizeHints* function() XAllocSizeHints;
-///
-XStandardColormap* function() XAllocStandardColormap;
-///
-XWMHints* function() XAllocWMHints;
-///
-int function(Region r, XRectangle* rect_return) XClipBox;
-///
-Region function() XCreateRegion;
-///
-const char* function() XDefaultString;
-///
-int function(Display* display, XID rid, XContext context) XDeleteContext;
-///
-int function(Region r) XDestroyRegion;
-///
-int function(Region r) XEmptyRegion;
-///
-int function(Region r1, Region r2) XEqualRegion;
-///
-int function(Display* display, XID rid, XContext context, XPointer* data_return) XFindContext;
-///
-Status function(Display* display, Window w, XClassHint* class_hints_return) XGetClassHint;
-///
-Status function(Display* display, Window w, XIconSize** size_list_return, int* count_return) XGetIconSizes;
-///
-Status function(Display* display, Window w, XSizeHints* hints_return) XGetNormalHints;
-///
-Status function(Display* display, Window w, XStandardColormap** stdcmap_return, int* count_return, Atom property) XGetRGBColormaps;
-///
-Status function(Display* display, Window w, XSizeHints* hints_return, Atom property) XGetSizeHints;
-///
-Status function(Display* display, Window w, XStandardColormap* colormap_return, Atom property) XGetStandardColormap;
-///
-Status function(Display* display, Window window, XTextProperty* text_prop_return, Atom property) XGetTextProperty;
-///
-XVisualInfo* function(Display* display, c_long vinfo_mask, XVisualInfo* vinfo_template, int*  nitems_return) XGetVisualInfo;
-///
-Status function(Display* display, Window w, XTextProperty* text_prop_return) XGetWMClientMachine;
-///
-XWMHints* function(Display* display, Window w) XGetWMHints;
-///
-Status function(Display* display, Window w, XTextProperty* text_prop_return) XGetWMIconName;
-///
-Status function(Display* display, Window w, XTextProperty* text_prop_return) XGetWMName;
-///
-Status function(Display* display, Window w, XSizeHints* hints_return, c_long* supplied_return) XGetWMNormalHints;
-///
-Status function(Display* display, Window w, XSizeHints* hints_return, c_long* supplied_return, Atom property) XGetWMSizeHints;
-///
-Status function(Display* display, Window w, XSizeHints* zhints_return) XGetZoomHints;
-///
-int function(Region sra, Region srb, Region dr_return) XIntersectRegion;
-///
-void function(KeySym sym, KeySym* lower, KeySym* upper) XConvertCase;
-///
-int function(XKeyEvent* event_struct, char* buffer_return, int bytes_buffer, KeySym* keysym_return, XComposeStatus* status_in_out) XLookupString;
-///
-Status function(Display* display, int screen, int depth, int class_, XVisualInfo* vinfo_return) XMatchVisualInfo;
-///
-int function(Region r, int dx, int dy) XOffsetRegion;
-///
-Bool function(Region r, int x, int y) XPointInRegion;
-///
-Region function(XPoint* points, int n, int fill_rule) XPolygonRegion;
-///
-int function(Region r, int x, int y, uint width, uint height) XRectInRegion;
-///
-int function(Display* display, XID rid, XContext context, const char* data) XSaveContext;
-///
-int function(Display* display, Window w, XClassHint* class_hints) XSetClassHint;
-///
-int function(Display* display, Window w, XIconSize* size_list, int count) XSetIconSizes;
-///
-int function(Display* display, Window w, XSizeHints* hints) XSetNormalHints;
-///
-void function(Display* display, Window w, XStandardColormap* stdcmaps, int count, Atom property) XSetRGBColormaps;
-///
-int function(Display* display, Window w, XSizeHints* hints, Atom property) XSetSizeHints;
-///
-int function(Display* display, Window w, const char* window_name, const char* icon_name, Pixmap icon_pixmap, char** argv, int argc, XSizeHints* hints) XSetStandardProperties;
-///
-void function(Display* display, Window w, XTextProperty* text_prop, Atom property) XSetTextProperty;
-///
-void function(Display* display, Window w, XTextProperty* text_prop) XSetWMClientMachine;
-///
-int function(Display* display, Window w, XWMHints* wm_hints) XSetWMHints;
-///
-void function(Display* display, Window w, XTextProperty* text_prop) XSetWMIconName;
-///
-void function(Display* display, Window w, XTextProperty* text_prop) XSetWMName;
-///
-void function(Display* display, Window w, XSizeHints* hints) XSetWMNormalHints;
-///
-void function(Display* display, Window w, XTextProperty* window_name, XTextProperty* icon_name, char** argv, int argc, XSizeHints* normal_hints, XWMHints* wm_hints, XClassHint* class_hints) XSetWMProperties;
-///
-void function(Display* display, Window w, const char* window_name, const char* icon_name, char** argv, int argc, XSizeHints* normal_hints, XWMHints* wm_hints, XClassHint* class_hints) XmbSetWMProperties;
-///
-void function(Display* display, Window w, const char* window_name, const char* icon_name, char** argv, int argc, XSizeHints* normal_hints, XWMHints* wm_hints, XClassHint* class_hints) Xutf8SetWMProperties;
-///
-void function(Display* display, Window w, XSizeHints* hints, Atom property) XSetWMSizeHints;
-///
-int function(Display* display, GC gc, Region r) XSetRegion;
-///
-void function(Display* display, Window w, XStandardColormap* colormap, Atom property) XSetStandardColormap;
-///
-int function(Display* display, Window w, XSizeHints* zhints) XSetZoomHints;
-///
-int function(Region r, int dx, int dy) XShrinkRegion;
-///
-Status function(char** list, int count, XTextProperty* text_prop_return) XStringListToTextProperty;
-///
-int function(Region sra, Region srb, Region dr_return) XSubtractRegion;
-///
-int function(Display* display, char** list, int count, XICCEncodingStyle style, XTextProperty* text_prop_return) XmbTextListToTextProperty;
-///
-int function(Display* display, wchar_t** list, int count, XICCEncodingStyle style, XTextProperty* text_prop_return) XwcTextListToTextProperty;
-///
-int function(Display* display, char** list, int count, XICCEncodingStyle style, XTextProperty* text_prop_return) Xutf8TextListToTextProperty;
-///
-void function(wchar_t** list) XwcFreeStringList;
-///
-Status function(XTextProperty* text_prop, char*** list_return, int* count_return) XTextPropertyToStringList;
-///
-int function(Display* display, const XTextProperty* text_prop, char*** list_return, int* count_return) XmbTextPropertyToTextList;
-///
-int function(Display* display, const XTextProperty* text_prop, wchar_t*** list_return, int* count_return) XwcTextPropertyToTextList;
-///
-int function(Display* display, const XTextProperty* text_prop, char*** list_return, int* count_return) Xutf8TextPropertyToTextList;
-///
-int function(XRectangle* rectangle, Region src_region, Region dest_region_return) XUnionRectWithRegion;
-///
-int function(Region sra, Region srb, Region dr_return) XUnionRegion;
-///
-int function(Display* display, int screen_number, const char* user_geometry, const char* default_geometry, uint border_width, XSizeHints* hints, int* x_return, int* y_return, int* width_return, int* height_return, int* gravity_return) XWMGeometry;
-///
-int function(Region sra, Region srb, Region dr_return) XXorRegion;
