@@ -42,6 +42,7 @@ extern(C):
 	int function(const char* str, size_t len) _Xmblen;
 
 	///
+	@("LoadOptional")
 	int function() _Xdebug_p;
 
 	///

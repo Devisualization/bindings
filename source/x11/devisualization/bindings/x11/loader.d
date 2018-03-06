@@ -10,25 +10,32 @@ import derelict.util.sharedlib;
 
 ///
 __gshared X11Loader x11Loader;
+///
 __gshared X11Functions* x11;
 
 /// uses GC because it is "smart" in loading the library
 struct X11Loader {
 	private {
-		SharedLib loader;
+		SharedLib loader, loader_xrandr, loader_xrender;
 
 		version(OSX) {
 			static string[] ToLoadFiles = ["libX11.dylib"];
+            static string[] ToLoadFilesXrandr = ["libXrandr.dylib"];
+            static string[] ToLoadFilesXrender = ["libXrender.dylib"];
 		} else version(linux) {
             static string[] ToLoadFiles = ["libX11.so.6", "libX11.so.5"];
+            static string[] ToLoadFilesXrandr = ["libXrandr.so.2"];
+            static string[] ToLoadFilesXrender = ["libXrender.so.1"];
 		} else version(Windows) {
 			static string[] ToLoadFiles = ["libX11.dll"];
+            static string[] ToLoadFilesXrandr = ["libXrandr.dll"];
+            static string[] ToLoadFilesXrender = ["libXrender.dll"];
 		} else static assert(0, "Unsupported platform");
 	}
 	@disable this(this);
 
 	/// File can be null
-	this(string file) {
+	this(string file, string filexrandr=null, string filexrender=null) {
     	x11 = new X11Functions;
 
     	if (file !is null)
@@ -36,12 +43,23 @@ struct X11Loader {
     	else
     		loader.load(ToLoadFiles);
 
+        if (filexrandr !is null)
+    		loader_xrandr.load(filexrandr ~ ToLoadFilesXrandr);
+    	else
+    		loader_xrandr.load(ToLoadFilesXrandr);
+
+        if (filexrender !is null)
+    		loader_xrender.load(filexrender ~ ToLoadFilesXrender);
+    	else
+    		loader_xrender.load(ToLoadFilesXrender);
+
 		loadSymbols();
 	}
 
 	~this() {
-		import std.file : remove;
-		loader.unload;
+		loader_xrender.unload;
+        loader_xrender.unload;
+        loader.unload;
 	}
 
 	private {
@@ -56,7 +74,13 @@ struct X11Loader {
                         static if (__traits(getAttributes, __traits(getMember, x11, m)).length > 0)
                             enum LoadOptional = __traits(getAttributes, __traits(getMember, x11, m))[0] == "LoadOptional";
                         else enum LoadOptional = false;
-                        mixin("x11." ~ m ~ " = cast(M)loader.loadSymbol(\"" ~ m ~ "\", LoadOptional);");
+
+
+                        mixin("x11." ~ m ~ " = cast(M)loader.loadSymbol(\"" ~ m ~ "\", false);");
+                        mixin("if (x11." ~ m ~ " is null) x11." ~ m ~ " = cast(M)loader_xrandr.loadSymbol(\"" ~ m ~ "\", false);");
+                        mixin("if (x11." ~ m ~ " is null) x11." ~ m ~ " = cast(M)loader_xrender.loadSymbol(\"" ~ m ~ "\", false);");
+                        if (!LoadOptional && __traits(getMember, x11, m) is null)
+                            throw new Exception("Failed to load symbol " ~ m);
                     }
                 }
             }
