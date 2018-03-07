@@ -96,7 +96,6 @@ struct X11Functions {
     mixin XLibFunctions;
     mixin XResourceFunctions;
     mixin XUtilFunctions;
-@("LoadOptional"):
     mixin XrandrFunctions;
     mixin XrenderFunctions;
 }

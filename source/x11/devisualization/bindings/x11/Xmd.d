@@ -63,15 +63,9 @@ size_t _SIZEOF(T)(){ return T.sizeof; }
 alias SIZEOF = _SIZEOF;
 
 ///
-static if (LONG64) {
-    ///
-    alias INT64 = c_ulong;
-    ///
-    alias INT32 = int;
-} else {
-    ///
-    alias INT32 = c_long;
-}
+alias INT64 = long;
+///
+alias INT32 = int;
 
 ///
 alias INT16 = short;
@@ -79,14 +73,15 @@ alias INT16 = short;
 ///
 alias INT8 = byte;
 
+///
 static if (LONG64) {
     ///
     alias CARD64 = c_ulong;
     ///
     alias CARD32 = uint;
 } else {
-	///
-	alias CARD64 = ulong;
+    ///
+    alias CARD64 = ulong;
     ///
     alias CARD32 = c_ulong;
 }

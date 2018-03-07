@@ -211,6 +211,17 @@ extern(C):
     void function(Display* dpy, RRProvider provider, Atom property) XRRDeleteProviderProperty;
     ///
     int function(Display* dpy, RRProvider provider, Atom property, c_long offset, c_long length, Bool _delete, Bool pending, Atom req_type, Atom* actual_type, int* actual_format, c_ulong* nitems, c_ulong* bytes_after, ubyte** prop) XRRGetProviderProperty;
+
+    ///
+    XRRMonitorInfo* function(Display* dpy, int noutput) XRRAllocateMonitor;
+    ///
+    XRRMonitorInfo* function(Display* dpy, Window window, Bool get_active, int* nmonitors) XRRGetMonitors;
+    ///
+    void function(Display* dpy, Window window, XRRMonitorInfo* monitor) XRRSetMonitor;
+    ///
+    void function(Display* dpy, Window window, Atom name) XRRDeleteMonitor;
+    ///
+    void function(XRRMonitorInfo* monitors) XRRFreeMonitors;
 }
 
 ///
@@ -692,4 +703,33 @@ struct _XRRProviderInfo {
 
 ///
 alias XRRProviderInfo = _XRRProviderInfo;
+
+///
+struct _XRRMonitorInfo {
+    ///
+    Atom name;
+    ///
+    Bool primary;
+    ///
+    Bool automatic;
+    ///
+    int noutput;
+    ///
+    int x;
+    ///
+    int y;
+    ///
+    int width;
+    ///
+    int height;
+    ///
+    int mwidth;
+    ///
+    int mheight;
+    ///
+    RROutput *outputs;
+}
+
+///
+alias XRRMonitorInfo = _XRRMonitorInfo;
 

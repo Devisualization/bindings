@@ -45,6 +45,7 @@ SOFTWARE.
 
 ******************************************************************/
 module devisualization.bindings.x11.X;
+import core.stdc.config;
 
 ///
 enum X_PROTOCOL = 11;
@@ -64,19 +65,19 @@ enum X_PROTOCOL_REVISION = 0;
  */
 
 /// 
-alias XID = uint;
+alias XID = c_ulong;
 
 ///
-alias Mask = uint;
+alias Mask = c_ulong;
 
 ///
-alias Atom = uint;
+alias Atom = c_ulong;
 
 ///
-alias VisualID = uint;
+alias VisualID = c_ulong;
 
 ///
-alias Time = uint;
+alias Time = c_ulong;
 
 ///
 alias Window = XID;
