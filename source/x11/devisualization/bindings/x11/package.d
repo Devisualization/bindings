@@ -16,3 +16,4 @@ public import devisualization.bindings.x11.Xprotostr;
 public import devisualization.bindings.x11.Xresource;
 public import devisualization.bindings.x11.Xutil;
 public import devisualization.bindings.x11.extensions;
+public import devisualization.bindings.x11.Xcursor;
