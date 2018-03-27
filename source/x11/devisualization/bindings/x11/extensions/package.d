@@ -10,3 +10,6 @@ public import devisualization.bindings.x11.extensions.randr;
 public import devisualization.bindings.x11.extensions.render;
 public import devisualization.bindings.x11.extensions.Xrandr;
 public import devisualization.bindings.x11.extensions.Xrender;
+public import devisualization.bindings.x11.extensions.XKB;
+public import devisualization.bindings.x11.extensions.XKBstr;
+public import devisualization.bindings.x11.extensions.XKBgeom;

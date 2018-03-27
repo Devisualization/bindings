@@ -101,13 +101,16 @@ struct X11Loader {
 ///
 struct X11Functions {
     import devisualization.bindings.x11 : XLibFunctions, XResourceFunctions, XUtilFunctions,
-    XrandrFunctions, XrenderFunctions, XcursorFunctions;
+    XrandrFunctions, XrenderFunctions, XcursorFunctions, XKBFunctions, XKBGeomFunctions;
 
     mixin XLibFunctions;
     mixin XResourceFunctions;
     mixin XUtilFunctions;
     mixin XrandrFunctions;
     mixin XrenderFunctions;
-@("LoadOptional")
+
+@("LoadOptional"):
     mixin XcursorFunctions;
+    mixin XKBFunctions;
+    mixin XKBGeomFunctions;
 }
