@@ -41,6 +41,14 @@
 			"dependencies": {
 				"derelict-util": "~>2.1.0",
 			},
-        }
+        },
+        {
+            "name": "libnotify",
+            "sourcePaths": ["source/libnotify", "source/gdk"],
+            "importPaths": ["source/libnotify", "source/gdk"],
+			"dependencies": {
+				"derelict-util": "~>2.1.0"
+			}
+        },
 	]
 }
