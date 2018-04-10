@@ -19,52 +19,13 @@
  * files for a list of changes.  These files are distributed with
  * GLib at ftp://ftp.gtk.org/pub/gtk/.
  */
-module devisualization.bindings.gdk.glib.gtypes;
-import core.stdc.config : c_long, c_ulong;
-
-/* Provide type definitions for commonly used types.
- *  These are useful because a "gint8" can be adjusted
- *  to be 1 byte (8 bits) on all platforms. Similarly and
- *  more importantly, "gint32" can be adjusted to be
- *  4 bytes (32 bits) on all platforms.
- */
-
-alias gsize = size_t;
-alias gssize = ptrdiff_t;
+module devisualization.bindings.gdk.glib.gmem;
 
 ///
-alias gchar = ubyte;
-///
-alias gshort = short;
-///
-alias glong = c_long;
-///
-alias gint = int;
-///
-alias gboolean = gint;
-///
-alias guchar = ubyte;
-///
-alias gushort = ushort;
-///
-alias gulong = c_ulong;
-///
-alias guint = uint;
+mixin template GdkGlibGmem_Functions() {
+    import devisualization.bindings.gdk.glib.gtypes;
+extern(C):
 
-///
-alias gfloat = float;
-///
-alias gdouble = double;
-
-///
-alias gpointer = void*;
-
-/**
- * GFreeFunc:
- * @data: a data pointer
- *
- * Declares a type of function which takes an arbitrary
- * data pointer argument and has no return value. It is
- * not currently used in GLib or GTK+.
- */
-alias GFreeFunc = extern(C) void function(gpointer data);
+    ///
+    void function(gpointer mem) g_free;
+}

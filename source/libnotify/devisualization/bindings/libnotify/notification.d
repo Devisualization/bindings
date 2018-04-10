@@ -51,6 +51,21 @@ extern(C):
     void function(NotifyNotification* notification, NotifyUrgency urgency) notify_notification_set_urgency;
     ///
     void function(NotifyNotification* notification, GdkPixbuf* pixbuf) notify_notification_set_image_from_pixbuf;
+
+    ///
+    void function(NotifyNotification* notification, const char* key, GVariant* value) notify_notification_set_hint;
+    ///
+    void function(NotifyNotification *notification, const char* app_name) notify_notification_set_app_name;
+    ///
+    void function(NotifyNotification* notification) notify_notification_clear_hints;
+    ///
+    void function(NotifyNotification *notification, const char* action, const char* label, NotifyActionCallback callback, gpointer user_data, GFreeFunc free_func) notify_notification_add_action;
+    ///
+    void function(NotifyNotification* notification) notify_notification_clear_actions;
+    ///
+    gboolean function(NotifyNotification* notification, GError** error) notify_notification_close;
+    ///
+    gint function(const NotifyNotification* notification) notify_notification_get_closed_reason;
 }
 
 /**

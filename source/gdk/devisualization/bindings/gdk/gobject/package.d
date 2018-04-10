@@ -6,5 +6,7 @@
  *              http://www.boost.org/LICENSE_1_0.txt)
  */
 module devisualization.bindings.gdk.gobject;
+public import devisualization.bindings.gdk.gobject.gclosure;
 public import devisualization.bindings.gdk.gobject.gobject;
 public import devisualization.bindings.gdk.gobject.gtype;
+public import devisualization.bindings.gdk.gobject.gsignal;

@@ -19,6 +19,26 @@ import devisualization.bindings.gdk.glib.gtypes;
 import devisualization.bindings.gdk.glib.gdataset;
 import devisualization.bindings.gdk.gobject.gtype;
 
+mixin template GObject_Functions() {
+    import devisualization.bindings.gdk.glib.gtypes;
+extern(C):
+
+    /**
+     * G_OBJECT:
+     * @object: Object which is subject to casting.
+     *
+     * Casts a #GObject or derived pointer into a (GObject*) pointer.
+     * Depending on the current debugging level, this function may invoke
+     * certain runtime checks to identify invalid casts.
+     */
+    GObject* G_OBJECT(T)(T object){ return G_TYPE_CHECK_INSTANCE_CAST!GObject(object, G_TYPE_OBJECT); }
+
+    ///
+    gpointer function(gpointer object) g_object_ref;
+    ///
+    void function(gpointer object) g_object_unref;
+}
+
 ///
 alias GObject = _GObject;
 ///

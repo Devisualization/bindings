@@ -82,11 +82,22 @@ struct LibNotifyLoader {
 ///
 struct LibNotifyAllFunctions {
     import devisualization.bindings.libnotify : LibNotifyFunctions, LibNotifyNotificationFunctions, LibNotifyEnumTypesFunctions;
-    import devisualization.bindings.gdk.gdk_pixbuf;
+    import devisualization.bindings.gdk.glib.gmem : GdkGlibGmem_Functions;
+    import devisualization.bindings.gdk.glib.gstrfuncs : GdkGlibGstrfuncs_Functions;
+    import devisualization.bindings.gdk.gobject.gtype : GObjectGType_Functions;
+    import devisualization.bindings.gdk.gobject.gobject : GObject_Functions;
+    import devisualization.bindings.gdk.gobject.gsignal : GObjectGSignal_Functions;
+    import devisualization.bindings.gdk.gdk_pixbuf : GDK_Pixbuf_Functions;
 
     mixin LibNotifyFunctions;
     mixin LibNotifyNotificationFunctions;
     mixin LibNotifyEnumTypesFunctions;
+
+    mixin GdkGlibGmem_Functions;
+    mixin GdkGlibGstrfuncs_Functions;
+    mixin GObjectGType_Functions;
+    mixin GObject_Functions;
+    mixin GObjectGSignal_Functions;
 
 @("LoadOptional"):
     mixin GDK_Pixbuf_Functions;
