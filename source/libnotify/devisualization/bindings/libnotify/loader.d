@@ -16,21 +16,24 @@ __gshared LibNotifyAllFunctions* libnotify;
 /// uses GC because it is "smart" in loading the library
 struct LibNotifyLoader {
     private {
-        SharedLib loader;
+        SharedLib loader, loaderPixbuf;
 
         version(OSX) {
             static string[] ToLoadFiles = ["libnotify.dylib"];
+            static string[] ToLoadFilesPixbuf = ["libgdk_pixbuf-2.0.dylib", "libgdk_pixbuf.dylib"];
         } else version(linux) {
             static string[] ToLoadFiles = ["libnotify.so.4"];
+            static string[] ToLoadFilesPixbuf = ["libgdk_pixbuf-2.0.so.0"];
         } else version(Windows) {
             static string[] ToLoadFiles = ["libnotify.dll"];
+            static string[] ToLoadFilesPixbuf = ["libgdk_pixbuf-2.0.dll", "libgdk_pixbuf.dll"];
         } else static assert(0, "Unsupported platform");
     }
 
     @disable this(this);
 
     /// File can be null
-    this(string file) {
+    this(string file, string filePixbuf=null) {
     	libnotify = new LibNotifyAllFunctions;
 
     	if (file !is null)
@@ -38,11 +41,17 @@ struct LibNotifyLoader {
     	else
     		loader.load(ToLoadFiles);
 
+        if (filePixbuf !is null)
+    		loaderPixbuf.load(filePixbuf ~ ToLoadFilesPixbuf);
+    	else
+    		loaderPixbuf.load(ToLoadFilesPixbuf);
+
         loadSymbols();
     }
 
     ~this() {
         loader.unload;
+        loaderPixbuf.unload;
     }
 
     private {
@@ -60,6 +69,7 @@ struct LibNotifyLoader {
 
 
                         mixin("libnotify." ~ m ~ " = cast(M)loader.loadSymbol(\"" ~ m ~ "\", false);");
+                        mixin("if (libnotify." ~ m ~ " is null) libnotify." ~ m ~ " = cast(M)loaderPixbuf.loadSymbol(\"" ~ m ~ "\", false);");
                         if (!LoadOptional && __traits(getMember, libnotify, m) is null)
                             throw new Exception("Failed to load symbol " ~ m);
                     }
@@ -72,8 +82,12 @@ struct LibNotifyLoader {
 ///
 struct LibNotifyAllFunctions {
     import devisualization.bindings.libnotify : LibNotifyFunctions, LibNotifyNotificationFunctions, LibNotifyEnumTypesFunctions;
+    import devisualization.bindings.gdk.gdk_pixbuf;
 
     mixin LibNotifyFunctions;
     mixin LibNotifyNotificationFunctions;
     mixin LibNotifyEnumTypesFunctions;
+
+@("LoadOptional"):
+    mixin GDK_Pixbuf_Functions;
 }
