@@ -12,6 +12,7 @@ public import devisualization.bindings.gdk.glib.glist;
 public import devisualization.bindings.gdk.glib.gquark;
 public import devisualization.bindings.gdk.glib.gerror;
 public import devisualization.bindings.gdk.glib.gmem;
+public import devisualization.bindings.gdk.glib.gmain;
 public import devisualization.bindings.gdk.glib.gstrfuncs;
 public import devisualization.bindings.gdk.glib.gvariant;
 
