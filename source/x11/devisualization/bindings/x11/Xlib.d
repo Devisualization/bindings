@@ -2238,7 +2238,7 @@ struct XClientMessageEvent {
 		///
 		short[10] s;
 		///
-		int[5] l;
+		c_long[5] l;
 	}
 	///
 	data_t data;
