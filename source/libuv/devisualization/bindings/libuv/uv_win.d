@@ -26,8 +26,11 @@ version(Windows):
 __gshared extern(C):
 
 import core.sys.windows.winsock2;
+public import core.sys.windows.basetsd : HANDLE;
+public import core.sys.windows.winnt : WCHAR;
+public import core.sys.windows.windef : WORD, BYTE, DWORD;
 public import core.sys.windows.winsock2;
-public import core.sys.windows.winbase : OVERLAPPED, HANDLE, WCHAR, WORD, BYTE, DWORD;
+public import core.sys.windows.winbase : OVERLAPPED;
 public import core.sys.windows.mswsock : LPFN_ACCEPTEX, LPFN_CONNECTEX;
 public import core.sys.windows.wincon : INPUT_RECORD, COORD;
 ///
