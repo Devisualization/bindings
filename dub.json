@@ -50,5 +50,14 @@
 				"derelict-util": "~>2.1.0"
 			}
         },
+        {
+            "name": "systemd",
+            "sourcePaths": ["source/systemd"],
+            "importPaths": ["source/systemd"],
+            "platforms": ["linux"],
+			"dependencies": {
+				"derelict-util": "~>2.1.0"
+			}
+        },
 	]
 }

@@ -13,7 +13,7 @@ __gshared X11Loader x11Loader;
 ///
 __gshared X11Functions* x11;
 
-/// uses GC because it is "smart" in loading the library
+/// uses GC
 struct X11Loader {
 	private {
 		SharedLib loader, loader_xrandr, loader_xrender, loader_xcursor;

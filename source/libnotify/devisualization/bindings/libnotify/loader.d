@@ -13,7 +13,7 @@ __gshared LibNotifyLoader libnotifyLoader;
 ///
 __gshared LibNotifyAllFunctions* libnotify;
 
-/// uses GC because it is "smart" in loading the library
+/// uses GC
 struct LibNotifyLoader {
     private {
         SharedLib loader, loaderPixbuf, loaderGlib, loaderGObject;
