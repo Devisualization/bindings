@@ -17,6 +17,7 @@
  * along with systemd; If not, see <http://www.gnu.org/licenses/>.
  */
 module devisualization.bindings.systemd.sd_bus_vtable;
+version(linux):
 import devisualization.bindings.systemd.sd_bus;
 
 ///

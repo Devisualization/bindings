@@ -17,6 +17,7 @@
  * along with systemd; If not, see <http://www.gnu.org/licenses/>.
  */
 module devisualization.bindings.systemd.sd_bus;
+version(linux):
 import core.sys.posix.sys.uio;
 import core.sys.posix.sys.types;
 

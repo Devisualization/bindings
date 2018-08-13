@@ -6,6 +6,7 @@
  *              http://www.boost.org/LICENSE_1_0.txt)
  */
 module devisualization.bindings.systemd.loader;
+version(linux):
 import derelict.util.sharedlib;
 
 ///
@@ -17,10 +18,7 @@ __gshared SystemDAllFunctions* systemd;
 struct SystemDLoader {
     private {
         SharedLib loader;
-
-        version(linux) {
-            static string[] ToLoadFiles = ["libsystemd.so.0"];
-        } else static assert(0, "Unsupported platform");
+        static string[] ToLoadFiles = ["libsystemd.so.0"];
     }
 
     @disable this(this);
