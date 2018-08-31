@@ -63,10 +63,13 @@ enum {
  * macros below instead
  */
 struct sd_bus_vtable {
+    private import std.bitmanip : bitfields;
+
     ///
-    ubyte type;
-    ///
-    ulong flags;
+    mixin(bitfields!(
+        ubyte, "type", 8,
+        ulong, "flags", 56
+    ));
 
     ///
     union X {
@@ -82,11 +85,11 @@ struct sd_bus_vtable {
         ///
         struct Method {
             ///
-            const char* member;
+            const(char)* member;
             ///
-            const char* signature;
+            const(char)* signature;
             ///
-            const char* result;
+            const(char)* result;
             ///
             sd_bus_message_handler_t handler;
             ///
@@ -99,9 +102,9 @@ struct sd_bus_vtable {
         ///
         struct Signal {
             ///
-            const char* member;
+            const(char)* member;
             ///
-            const char* signature;
+            const(char)* signature;
         }
 
         ///
@@ -110,9 +113,9 @@ struct sd_bus_vtable {
         ///
         struct Property {
             ///
-            const char* member;
+            const(char)* member;
             ///
-            const char* signature;
+            const(char)* signature;
             ///
             sd_bus_property_get_t get;
             ///

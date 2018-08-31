@@ -15,66 +15,66 @@ __gshared X11Functions* x11;
 
 /// uses GC
 struct X11Loader {
-	private {
-		SharedLib loader, loader_xrandr, loader_xrender, loader_xcursor;
+    private {
+        SharedLib loader, loader_xrandr, loader_xrender, loader_xcursor;
 
-		version(OSX) {
-			static string[] ToLoadFiles = ["libX11.dylib"];
+        version(OSX) {
+            static string[] ToLoadFiles = ["libX11.dylib"];
             static string[] ToLoadFilesXrandr = ["libXrandr.dylib"];
             static string[] ToLoadFilesXrender = ["libXrender.dylib"];
             static string[] ToLoadFilesXcursor = ["libXcursor.dylib"];
-		} else version(linux) {
+        } else version(linux) {
             static string[] ToLoadFiles = ["libX11.so.6", "libX11.so.5"];
             static string[] ToLoadFilesXrandr = ["libXrandr.so.2"];
             static string[] ToLoadFilesXrender = ["libXrender.so.1"];
             static string[] ToLoadFilesXcursor = ["libXcursor.so.1"];
-		} else version(Windows) {
-			static string[] ToLoadFiles = ["libX11.dll"];
+        } else version(Windows) {
+            static string[] ToLoadFiles = ["libX11.dll"];
             static string[] ToLoadFilesXrandr = ["libXrandr.dll"];
             static string[] ToLoadFilesXrender = ["libXrender.dll"];
             static string[] ToLoadFilesXcursor = ["libXcursor.dll"];
-		} else static assert(0, "Unsupported platform");
-	}
-	@disable this(this);
+        } else static assert(0, "Unsupported platform");
+    }
+    @disable this(this);
 
-	/// File can be null
-	this(string file, string filexrandr=null, string filexrender=null, string filexcursor=null) {
-    	x11 = new X11Functions;
+    /// File can be null
+    this(string file, string filexrandr=null, string filexrender=null, string filexcursor=null) {
+        x11 = new X11Functions;
 
-    	if (file !is null)
-    		loader.load(file ~ ToLoadFiles);
-    	else
-    		loader.load(ToLoadFiles);
+        if (file !is null)
+            loader.load(file ~ ToLoadFiles);
+        else
+            loader.load(ToLoadFiles);
 
         if (filexrandr !is null)
-    		loader_xrandr.load(filexrandr ~ ToLoadFilesXrandr);
-    	else
-    		loader_xrandr.load(ToLoadFilesXrandr);
+            loader_xrandr.load(filexrandr ~ ToLoadFilesXrandr);
+        else
+            loader_xrandr.load(ToLoadFilesXrandr);
 
         if (filexrender !is null)
-    		loader_xrender.load(filexrender ~ ToLoadFilesXrender);
-    	else
-    		loader_xrender.load(ToLoadFilesXrender);
+            loader_xrender.load(filexrender ~ ToLoadFilesXrender);
+        else
+            loader_xrender.load(ToLoadFilesXrender);
 
         if (filexcursor !is null)
-    		loader_xcursor.load(filexcursor ~ ToLoadFilesXcursor);
-    	else
-    		loader_xcursor.load(ToLoadFilesXcursor);
+            loader_xcursor.load(filexcursor ~ ToLoadFilesXcursor);
+        else
+            loader_xcursor.load(ToLoadFilesXcursor);
 
-		loadSymbols();
-	}
+        loadSymbols();
+    }
 
-	~this() {
+    ~this() {
         loader.unload;
         loader_xrandr.unload;
         loader_xrender.unload;
         loader_xcursor.unload;
-	}
+    }
 
-	private {
-		void loadSymbols() {
+    private {
+        void loadSymbols() {
             import std.traits : isFunctionPointer;
-			assert(loader.isLoaded);
+            assert(loader.isLoaded);
 
             foreach(m; __traits(allMembers, X11Functions)) {
                 static if (__traits(compiles, { mixin("alias M = typeof(x11." ~ m ~ ");"); })) {
@@ -94,8 +94,8 @@ struct X11Loader {
                     }
                 }
             }
-		}
-	}
+        }
+    }
 }
 
 ///
