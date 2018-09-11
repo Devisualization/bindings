@@ -18,7 +18,7 @@ __gshared SystemDAllFunctions* systemd;
 struct SystemDLoader {
     private {
         SharedLib loader;
-        static string[] ToLoadFiles = ["libsystemd.so.0"];
+        static string[] ToLoadFiles = ["libsystemd.so", "libsystemd.so.0"];
     }
 
     @disable this(this);
